@@ -1,0 +1,1 @@
+Generated vector approximations based on selected Casedock concept: Structured Dock Cases / option 2. Edit SVG files directly for production refinement.

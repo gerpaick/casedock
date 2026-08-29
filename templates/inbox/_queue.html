@@ -1,0 +1,52 @@
+<section class="panel queue-panel" data-inbox-queue>
+  <div class="section-head">
+    <div>
+      <p class="section-label">Queue</p>
+      <h3>Ready to triage</h3>
+    </div>
+    <span class="count-badge count-badge--queue" aria-label="{{ queue_items|length }} items in queue">
+      {{ queue_items|length }}
+    </span>
+  </div>
+
+  {% if queue_items %}
+    <div class="soft-list queue-list">
+      {% for inbox_item in queue_items %}
+        <a
+          href="{% url 'inbox:list' %}?selected={{ inbox_item.public_id }}"
+          class="soft-row queue-row"
+          hx-get="{% url 'inbox:list' %}?selected={{ inbox_item.public_id }}"
+          hx-target="#inbox-page"
+          hx-swap="outerHTML"
+          hx-push-url="true"
+          data-inbox-focus-return="selected-panel"
+        >
+          <div class="queue-row__main">
+            <p class="queue-row__title">{{ inbox_item.title }}</p>
+            {% if inbox_item.raw_body %}
+              <p class="queue-row__summary">
+                {{ inbox_item.raw_body|truncatechars:120 }}
+                {% include "inbox/_source_chip.html" with item=inbox_item extra_class="source-chip--inline" %}
+              </p>
+            {% elif inbox_item.source_url %}
+              <p class="queue-row__summary">
+                {{ inbox_item.source_url|truncatechars:120 }}
+                {% include "inbox/_source_chip.html" with item=inbox_item extra_class="source-chip--inline" %}
+              </p>
+            {% else %}
+              <p class="queue-row__summary">
+                No extra context.
+                {% include "inbox/_source_chip.html" with item=inbox_item extra_class="source-chip--inline" %}
+              </p>
+            {% endif %}
+          </div>
+          <div class="queue-row__meta">
+            <span class="queue-row__state">{{ inbox_item.get_triage_state_display }}</span>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="muted">Nothing else is waiting.</p>
+  {% endif %}
+</section>

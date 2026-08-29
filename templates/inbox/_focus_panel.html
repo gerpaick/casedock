@@ -1,0 +1,113 @@
+{% if selected_item %}
+  <section class="panel inbox-focus" data-inbox-selected tabindex="-1">
+    <div class="inbox-focus__topline">
+      <p class="section-label">Now</p>
+      <div class="inbox-focus__eyebrow">
+        <span class="pill">{{ selected_item.get_triage_state_display }}</span>
+        {% if selected_item.source_url %}
+          <span class="muted">Source linked</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="inbox-focus__body">
+      <div>
+        <h3 class="inbox-focus__title" data-inbox-selected-focus>
+          <a href="{% url 'inbox:detail' selected_item.public_id %}">{{ selected_item.title }}</a>
+        </h3>
+      </div>
+      {% if selected_item.triage_state == "doing_now" %}
+        <p class="detail-note">Already moving. Finish it or shape it properly.</p>
+      {% elif selected_item.triage_state == "new" %}
+        <p class="detail-note">Decide whether this stays small or becomes a Case.</p>
+      {% elif selected_item.triage_state == "waiting" %}
+        <p class="detail-note">Waiting on something external. Pull it forward only when it moves.</p>
+      {% else %}
+        <p class="detail-note">Set aside on purpose. Bring it back only if it belongs in front again.</p>
+      {% endif %}
+
+      {% if selected_item.raw_body %}
+        <div class="inbox-focus__context">
+          <p>{{ selected_item.raw_body|truncatechars:320|linebreaksbr }}</p>
+          {% include "inbox/_source_chip.html" with item=selected_item extra_class="source-chip--context" %}
+        </div>
+      {% else %}
+        <div class="inbox-focus__meta-note">
+          <p class="muted">No added context yet.</p>
+          {% include "inbox/_source_chip.html" with item=selected_item extra_class="source-chip--context" %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="inbox-focus__actions">
+      <div class="inbox-focus__action-bar">
+        <div class="inbox-focus__primary-actions">
+          <a href="{% url 'inbox:convert' selected_item.public_id %}" class="button">Start a Case</a>
+          <form action="{% url 'inbox:triage' selected_item.public_id %}" method="post" class="inline-form">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="do_now" />
+            <button type="submit" class="button button-muted">
+              {% if selected_item.triage_state == "doing_now" %}Finish it{% else %}Handle now{% endif %}
+            </button>
+          </form>
+        </div>
+        <div class="inbox-focus__utility-actions">
+          <form
+            action="{% url 'inbox:triage' selected_item.public_id %}"
+            method="post"
+            class="inline-form"
+            hx-post="{% url 'inbox:triage' selected_item.public_id %}"
+            hx-target="#inbox-page"
+            hx-swap="outerHTML"
+            data-inbox-focus-return="selected-panel"
+          >
+            {% csrf_token %}
+            <input type="hidden" name="action" value="park" />
+            <input type="hidden" name="next" value="{% url 'inbox:list' %}?selected={{ selected_item.public_id }}" />
+            <button type="submit" class="button button-subtle">Set aside</button>
+          </form>
+          <form
+            action="{% url 'inbox:triage' selected_item.public_id %}"
+            method="post"
+            class="inline-form"
+            hx-post="{% url 'inbox:triage' selected_item.public_id %}"
+            hx-target="#inbox-page"
+            hx-swap="outerHTML"
+            data-inbox-focus-return="selected-panel"
+          >
+            {% csrf_token %}
+            <input type="hidden" name="action" value="waiting" />
+            <input type="hidden" name="next" value="{% url 'inbox:list' %}?selected={{ selected_item.public_id }}" />
+            <button type="submit" class="button button-subtle">Waiting on</button>
+          </form>
+          {% if selected_item.source_url %}
+            <a href="{{ selected_item.source_url }}" class="button button-link">Open source</a>
+          {% endif %}
+          <form
+            action="{% url 'inbox:triage' selected_item.public_id %}"
+            method="post"
+            class="inline-form"
+            hx-post="{% url 'inbox:triage' selected_item.public_id %}"
+            hx-target="#inbox-page"
+            hx-swap="outerHTML"
+            data-inbox-focus-return="selected-panel"
+          >
+            {% csrf_token %}
+            <input type="hidden" name="action" value="archive" />
+            <button type="submit" class="button button-subtle">Archive</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="inbox-focus__footer">
+      <p class="muted">Make it a Case when it needs thought, structure, or more than one move.</p>
+    </div>
+  </section>
+{% else %}
+  <section class="panel empty-state">
+    <p class="section-label">Now</p>
+    <h3>Nothing is waiting for triage.</h3>
+    <p>Leave Inbox quiet until something real arrives.</p>
+  </section>
+{% endif %}

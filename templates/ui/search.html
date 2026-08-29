@@ -1,0 +1,99 @@
+{% extends "ui/base.html" %}
+
+{% block title %}casedock | Search{% endblock %}
+
+{% block content %}
+  <div class="surface-stack surface-stack--search">
+    <section class="page-head page-head--search">
+      <div class="page-head__title-wrap">
+        <p class="eyebrow">Search</p>
+        <h2>Find the thread fast.</h2>
+        <p class="page-copy">Search Cases and Inbox capture without turning this into a search product.</p>
+      </div>
+    </section>
+
+    <section class="panel search-entry">
+      <form method="get" action="{% url 'ui:search' %}" class="search-form">
+        <div class="field">
+          <label for="id_q">Search</label>
+          <input id="id_q" type="search" name="q" value="{{ query }}" placeholder="Case title, spec note, decision, execution item, Inbox text" />
+        </div>
+        <div class="button-row">
+          <button type="submit" class="button">Search</button>
+        </div>
+      </form>
+      {% if query %}
+        <div class="meta-list meta-list--search">
+          <span class="pill">{{ case_results|length }} Cases</span>
+          <span class="muted">{{ inbox_results|length }} Inbox matches</span>
+        </div>
+      {% else %}
+        <p class="muted">Search title, summary, next step, spec, decisions, execution notes, and Inbox text.</p>
+      {% endif %}
+    </section>
+
+    {% if query %}
+      <section class="search-results-shell" data-search-results>
+        <article class="panel search-results-panel search-results-panel--primary">
+          <div class="section-head">
+            <div>
+              <p class="section-label">Results</p>
+              <h3>Cases</h3>
+            </div>
+            <span class="muted">{{ case_results|length }}</span>
+          </div>
+          {% if case_results %}
+            <div class="soft-list search-list">
+              {% for case in case_results %}
+                <a href="{% url 'cases:detail' case.public_id %}" class="soft-row search-row">
+                  <div class="search-row__body">
+                    <div class="search-row__head">
+                      <span class="pill">Case</span>
+                      <p class="item-title">{{ case.title }}</p>
+                    </div>
+                    <p class="detail-note">{{ case.summary|default:case.next_step|default:"No summary or next step yet." }}</p>
+                  </div>
+                </a>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p class="muted">No Cases matched “{{ query }}”.</p>
+          {% endif %}
+        </article>
+
+        <article class="panel search-results-panel">
+          <div class="section-head">
+            <div>
+              <p class="section-label">Results</p>
+              <h3>Inbox</h3>
+            </div>
+            <span class="muted">{{ inbox_results|length }}</span>
+          </div>
+          {% if inbox_results %}
+            <div class="soft-list search-list">
+              {% for item in inbox_results %}
+                <a href="{% url 'inbox:detail' item.public_id %}" class="soft-row search-row">
+                  <div class="search-row__body">
+                    <div class="search-row__head">
+                      <span class="pill">Inbox</span>
+                      <p class="item-title">{{ item.title }}</p>
+                    </div>
+                    <p class="detail-note">{{ item.raw_body|default:item.source_url|default:"No extra context." }}</p>
+                  </div>
+                </a>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p class="muted">No Inbox items matched “{{ query }}”.</p>
+          {% endif %}
+        </article>
+      </section>
+    {% else %}
+      <section class="panel search-empty">
+        <p class="section-label">Search</p>
+        <h3>Start with a short query.</h3>
+        <p class="detail-note">Use Search when you remember the thread, but not the surface where it lives.</p>
+      </section>
+    {% endif %}
+  </div>
+{% endblock %}

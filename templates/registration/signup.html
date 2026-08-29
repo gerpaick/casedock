@@ -1,0 +1,44 @@
+{% extends "ui/base.html" %}
+
+{% block title %}Sign up{% endblock %}
+
+{% block content %}
+  <section class="page-head page-head--stacked">
+    <div>
+      <p class="eyebrow">casedock</p>
+      <h2>Sign up</h2>
+    </div>
+    <p class="page-copy">Create an account to start capturing and shaping your work.</p>
+  </section>
+
+  <section class="panel panel-form">
+    <form method="post" class="stack">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="field">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}
+            <p class="field-help">{{ field.help_text }}</p>
+          {% endif %}
+          {% if field.errors %}
+            {% for error in field.errors %}
+              <p class="field-error">{{ error }}</p>
+            {% endfor %}
+          {% endif %}
+        </div>
+      {% endfor %}
+      {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+          <p class="field-error">{{ error }}</p>
+        {% endfor %}
+      {% endif %}
+      <div class="button-row">
+        <button type="submit" class="button">Sign up</button>
+      </div>
+      <p class="muted">
+        Already have an account? <a href="{% url 'login' %}">Sign in</a>
+      </p>
+    </form>
+  </section>
+{% endblock %}

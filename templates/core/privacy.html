@@ -1,0 +1,85 @@
+{% extends "ui/base.html" %}
+
+{% block title %}casedock | Privacy{% endblock %}
+
+{% block content %}
+  <div class="surface-stack surface-stack--prose">
+    <section class="page-head">
+      <div class="page-head__title-wrap">
+        <p class="eyebrow">Privacy · Draft</p>
+        <h2>What casedock stores, and what stays yours.</h2>
+        <p class="page-copy">
+          This is the short, honest version. A full EU-legal review lands before public
+          launch — until then, treat this page as a draft that describes how the product
+          behaves today.
+        </p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <div>
+          <p class="section-label">Account</p>
+          <h3>What we store</h3>
+        </div>
+      </div>
+      <ul>
+        <li>Your email address — used only for login and account recovery.</li>
+        <li>Everything you create: Inbox items, Cases, decisions, execution items, notes, focus selections.</li>
+      </ul>
+      <p class="muted">Passwords are hashed. We cannot read them.</p>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <div>
+          <p class="section-label">Hosting</p>
+          <h3>Where it lives</h3>
+        </div>
+      </div>
+      <p>
+        casedock runs on a single VPS. Data is stored in PostgreSQL on the same host.
+        Hosting region and backup policy will be confirmed here before public launch.
+      </p>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <div>
+          <p class="section-label">Tracking</p>
+          <h3>Cookies and third parties</h3>
+        </div>
+      </div>
+      <ul>
+        <li>One session cookie — required for login. No tracking cookies.</li>
+        <li>No analytics, no advertising, no third-party trackers during beta.</li>
+        <li>We do not sell, share, or send your data to third parties.</li>
+      </ul>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <div>
+          <p class="section-label">Your control</p>
+          <h3>Delete or export</h3>
+        </div>
+      </div>
+      <p>
+        Your data is yours. To export or delete everything, email
+        <a href="mailto:privacy@casedock.local">privacy@casedock.local</a> from the
+        address on your account. Self-serve export and deletion in Settings is planned
+        before public launch.
+      </p>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <div>
+          <p class="section-label">Beta</p>
+          <h3>Status</h3>
+        </div>
+      </div>
+      <p class="muted">Last updated: 2026-07-30. casedock is in private beta — this policy may change before public launch, and changes will be announced in-product.</p>
+    </section>
+  </div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% if messages %}
+  <section
+    class="messages{% if message_scope_class %} {{ message_scope_class }}{% endif %}"
+    aria-live="polite"
+    data-message-group
+    {% if message_duration %}data-message-duration="{{ message_duration }}"{% endif %}
+  >
+    {% for message in messages %}
+      <article class="message message-{{ message.tags|default:'info' }}" data-message>
+        <div class="message__content">
+          <p class="message__text">{{ message }}</p>
+          <button
+            type="button"
+            class="message__dismiss"
+            aria-label="Dismiss message"
+            data-message-dismiss
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <span class="message__countdown" aria-hidden="true"></span>
+      </article>
+    {% endfor %}
+  </section>
+{% endif %}

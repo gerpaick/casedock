@@ -1,0 +1,89 @@
+{% extends "ui/base.html" %}
+
+{% block title %}casedock | Help{% endblock %}
+
+{% block content %}
+  <div class="surface-stack surface-stack--prose">
+    <section class="page-head">
+      <div class="page-head__title-wrap">
+        <p class="eyebrow">Help · Draft</p>
+        <h2>How casedock works.</h2>
+        <p class="page-copy">
+          The short version: capture everything into the Inbox, turn what matters into a
+          Case, then work on one Case at a time. This page is a basic starter — fuller
+          guides land closer to public launch.
+        </p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <div>
+          <p class="section-label">Start here</p>
+          <h3>Capture</h3>
+        </div>
+      </div>
+      <p>
+        Press <kbd>c</kbd> anywhere in the app (or open
+        <a href="{% url 'inbox:list' %}">Inbox</a>) and type whatever just landed — a
+        title is enough. No required fields, no due dates, no priority flags.
+      </p>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <div>
+          <p class="section-label">Triage</p>
+          <h3>Turn an Inbox item into a Case</h3>
+        </div>
+      </div>
+      <p>
+        Open an Inbox item and choose what to do with it. <em>Convert to Case</em>
+        moves it into the workspace with space for spec, decisions, execution, and
+        private notes.
+      </p>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <div>
+          <p class="section-label">Focus</p>
+          <h3>Pick one main Case for today</h3>
+        </div>
+      </div>
+      <p>
+        On <a href="{% url 'focus:today' %}">Focus</a> choose one main Case and up to
+        two supporting tracks. The Board will surface that main Case first so you don't
+        have to decide again where to look.
+      </p>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <div>
+          <p class="section-label">Re-entry</p>
+          <h3>Find anything</h3>
+        </div>
+      </div>
+      <p>
+        Use <a href="{% url 'ui:search' %}">Search</a> to find any Case by title or
+        content. Each Case keeps its spec, decisions, execution, and private notes
+        together so you can pick it back up without reconstructing context.
+      </p>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <div>
+          <p class="section-label">Contact</p>
+          <h3>Still stuck?</h3>
+        </div>
+      </div>
+      <p>
+        Email <a href="mailto:help@casedock.local">help@casedock.local</a> — a real
+        person reads every message. This address will switch to the production domain
+        before public launch.
+      </p>
+    </section>
+  </div>
+{% endblock %}

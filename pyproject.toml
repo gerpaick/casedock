@@ -1,0 +1,90 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "casedock"
+version = "0.1.0"
+description = "Calm workbench for solo technical builders."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+  "bleach>=6.2,<7",
+  "celery>=5.5,<6",
+  "Django>=6,<6.1",
+  "django-environ>=0.12,<1",
+  "django-ninja>=1.4,<2",
+  "gunicorn>=23,<24",
+  "markdown-it-py>=4,<5",
+  "psycopg[binary]>=3.2,<4",
+  "redis>=6,<7",
+  "uuid-utils>=0.10,<1",
+  "whitenoise[brotli]>=6.12,<7",
+]
+
+[dependency-groups]
+dev = [
+  "django-stubs>=5.2,<6",
+  "mypy>=1.18,<2",
+  "pytest>=8.4,<9",
+  "pytest-django>=4.11,<5",
+  "ruff>=0.14,<1",
+]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings.test"
+addopts = "-ra"
+python_files = ["test_*.py", "*_tests.py", "tests.py"]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+extend-exclude = [".venv", "*/migrations/*.py"]
+line-length = 100
+src = ["src", "tests"]
+target-version = "py313"
+
+[tool.ruff.lint]
+select = [
+  "B",    # flake8-bugbear
+  "C4",   # flake8-comprehensions
+  "E",    # pycodestyle errors
+  "ERA",  # eradicate (commented-out code)
+  "F",    # pyflakes
+  "I",    # isort
+  "PT",   # flake8-pytest-style
+  "RUF",  # ruff-specific rules
+  "SIM",  # flake8-simplify
+  "T20",  # flake8-print (no print statements)
+  "UP",   # pyupgrade
+]
+
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = false
+mark-parentheses = false
+
+[tool.ruff.lint.per-file-ignores]
+"src/**/models.py" = ["RUF012"]
+"src/**/forms.py" = ["RUF012"]
+"src/**/views.py" = ["RUF012"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_decorators = true
+plugins = ["mypy_django_plugin.main"]
+
+[[tool.mypy.overrides]]
+module = "environ"
+ignore_missing_imports = true
+
+[tool.django-stubs]
+django_settings_module = "config.settings.test"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/apps", "src/config"]

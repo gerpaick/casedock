@@ -1,0 +1,16 @@
+# casedock — add this block to your global Caddyfile on the Hetzner host.
+# Replace casedock.example.com with your real domain.
+
+casedock.example.com {
+	encode zstd gzip
+
+	# HSTS — owned by Caddy (Django's SECURE_HSTS_SECONDS=0 stays out of the way).
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+		-Server
+	}
+
+	# Caddy sets X-Forwarded-Proto automatically; Django trusts it via
+	# SECURE_PROXY_SSL_HEADER in config/settings/prod.py.
+	reverse_proxy casedock_web:8000
+}

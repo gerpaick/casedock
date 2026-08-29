@@ -1,0 +1,88 @@
+{% extends "ui/base.html" %}
+
+{% block title %}casedock | Active Cases{% endblock %}
+
+{% block content %}
+  <div class="surface-stack">
+    <section class="page-head">
+      <div class="page-head__title-wrap">
+        <p class="eyebrow">Cases</p>
+        <h2>Active</h2>
+        <p class="page-copy">Everything in motion right now.</p>
+      </div>
+      <div class="meta-list">
+        <span class="pill">{{ active_count }} active</span>
+      </div>
+    </section>
+
+    {% if active_cases %}
+      <div class="soft-list board-active-list">
+        {% for case in active_cases %}
+          <article class="soft-row board-active-row {% if case.focus_role %}board-active-row--focused{% endif %}">
+            <div class="board-active-row__body">
+              <div class="board-active-row__head">
+                <div class="board-active-row__title-block">
+                  <p class="item-title">
+                    <a href="{% url 'cases:detail' case.public_id %}">{{ case.title }}</a>
+                  </p>
+                  {% if case.focus_role %}
+                    <span class="pill">{{ case.focus_role|title }} focus</span>
+                  {% endif %}
+                  {% if case.is_stale %}
+                    <span class="pill pill--stale">Stale · {{ case.days_stale }}d</span>
+                  {% endif %}
+                </div>
+              </div>
+              {% if case.next_step %}
+                <p class="detail-note">{{ case.next_step }}</p>
+              {% elif case.summary %}
+                <p class="detail-note">{{ case.summary }}</p>
+              {% else %}
+                <p class="detail-note detail-note--muted">Needs direction</p>
+              {% endif %}
+              <div class="board-active-row__meta">
+                <span class="muted">{{ case.get_effort_display }}</span>
+                <span class="muted">{{ case.get_work_type_display }}</span>
+              </div>
+            </div>
+            <div class="board-active-row__actions">
+              <a href="{% url 'cases:detail' case.public_id %}" class="button">Open Case</a>
+              {% if case.board_action %}
+                <form
+                  method="post"
+                  action="{% url 'focus:action' %}"
+                  class="inline-form"
+                >
+                  {% csrf_token %}
+                  <input type="hidden" name="case_id" value="{{ case.public_id }}" />
+                  <input type="hidden" name="action" value="{{ case.board_action }}" />
+                  <input type="hidden" name="surface" value="board" />
+                  <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+                  <button type="submit" class="button button-quiet">{{ case.board_action_label }}</button>
+                </form>
+              {% endif %}
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <article class="subpanel">
+        <p class="section-label">Active</p>
+        <h3>No active Cases right now.</h3>
+        <p class="detail-note">The board is quiet. Start something when you're ready.</p>
+      </article>
+    {% endif %}
+  </div>
+{% endblock %}
+
+{% block page_help_title %}Active Cases{% endblock %}
+
+{% block page_help %}
+  <p>Your full active backlog. The Board only surfaces what matters now; this is everything in motion.</p>
+  <ul>
+    <li><strong>Order.</strong> Focused Cases first, then fresh work, then Cases marked stale.</li>
+    <li><strong>Focus buttons.</strong> Set a main, add a secondary, or pull a Case out of focus.</li>
+    <li><strong>Open Case.</strong> Drop into the full workspace for any item.</li>
+  </ul>
+  <p class="muted">Tip: if today's main isn't set, pick the Case you'd resume first.</p>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "ui/base.html" %}
+{% load static %}
+
+{% block title %}Inbox | casedock{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'vendor/tippy.css' %}" />
+{% endblock %}
+
+{% block extra_scripts %}
+  <script src="{% static 'vendor/popper.min.js' %}" defer></script>
+  <script src="{% static 'vendor/tippy-bundle.umd.min.js' %}" defer></script>
+{% endblock %}
+
+{% block content %}
+  {% include "inbox/_page.html" %}
+{% endblock %}
+
+{% block page_help_title %}Inbox{% endblock %}
+
+{% block page_help %}
+  <p>The capture queue. Brain-dump anything here, no fields required. Items wait silently until you triage.</p>
+  <ul>
+    <li><strong>To address.</strong> New captures not yet shaped into a Case.</li>
+    <li><strong>Shaped.</strong> Items you've started turning into Cases.</li>
+    <li><strong>Handled.</strong> Captures you've triaged or filed away.</li>
+  </ul>
+  <p class="muted">Tip: when you're ready to act on an item, convert it into a Case.</p>
+{% endblock %}

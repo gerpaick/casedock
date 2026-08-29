@@ -1,0 +1,27 @@
+:root {
+  --casedock-ink-navy: #0F172A;
+  --casedock-muted-blue: #8FA1B3;
+  --casedock-warm-white: #FAF8F5;
+  --casedock-dark-navy: #061827;
+  --casedock-dark-panel: #0B2234;
+  --casedock-logo-height-header: 32px;
+}
+
+.casedock-logo {
+  display: inline-block;
+  height: var(--casedock-logo-height-header);
+  width: auto;
+}
+
+.casedock-app-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --casedock-page-bg: #061827;
+    --casedock-text: #F8FAFC;
+  }
+}

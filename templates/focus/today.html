@@ -1,0 +1,152 @@
+{% extends "ui/base.html" %}
+
+{% block title %}casedock | Focus{% endblock %}
+
+{% block content %}
+  <div class="surface-stack surface-stack--focus">
+    <section class="page-head page-head--focus">
+      <div class="page-head__title-wrap">
+        <p class="eyebrow">Focus</p>
+        <h2>Keep the day narrow.</h2>
+        <p class="page-copy">One main Case. Two supporting tracks if they help.</p>
+      </div>
+      <div class="meta-list meta-list--focus">
+        <span class="pill">{{ focus_date }}</span>
+        {% if main_assignment %}
+          <span class="muted">Main set</span>
+        {% else %}
+          <span class="muted">Main not chosen yet</span>
+        {% endif %}
+        <span class="muted">{{ secondary_assignments|length }} secondary</span>
+      </div>
+    </section>
+
+    <section class="focus-workbench">
+      <article class="panel focus-primary" data-focus-primary>
+        <div class="section-head">
+          <div>
+            <p class="section-label">Current</p>
+            <h3>Today at the front</h3>
+            <p class="muted">Make the day obvious before you spread it out.</p>
+          </div>
+          <a href="{% url 'ui:home' %}" class="button button-muted">Open Board</a>
+        </div>
+        <div class="focus-primary__body" data-focus-current>
+          {% if main_assignment %}
+            <article class="focus-spotlight">
+              <div class="focus-spotlight__meta">
+                <span class="pill">Main</span>
+                <span class="muted">{{ main_assignment.case.get_status_display }}</span>
+              </div>
+              <h3 class="focus-spotlight__title">
+                <a href="{% url 'cases:detail' main_assignment.case.public_id %}">{{ main_assignment.case.title }}</a>
+              </h3>
+              <p class="detail-note">{{ main_assignment.case.display_hint }}</p>
+              <div class="button-row">
+                <a href="{% url 'cases:detail' main_assignment.case.public_id %}" class="button button-link focus-open-link">Open Case</a>
+                <form method="post" action="{% url 'focus:action' %}" class="inline-form">
+                  {% csrf_token %}
+                  <input type="hidden" name="case_id" value="{{ main_assignment.case.public_id }}" />
+                  <input type="hidden" name="action" value="clear" />
+                  <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+                  <button type="submit" class="button button-subtle">Remove main</button>
+                </form>
+              </div>
+            </article>
+          {% else %}
+            <article class="subpanel focus-primary__empty">
+              <p class="section-label">Main</p>
+              <h3>Nothing has the front yet.</h3>
+              <p class="detail-note">Choose the Case that should be easiest to resume today.</p>
+            </article>
+          {% endif %}
+
+          <div class="focus-secondary-block">
+            <div class="section-head">
+              <div>
+                <p class="section-label">Support</p>
+                <h3>Secondary Cases</h3>
+              </div>
+              <span class="muted">{{ secondary_assignments|length }}</span>
+            </div>
+            {% if secondary_assignments %}
+              <div class="soft-list focus-secondary-list">
+                {% for assignment in secondary_assignments %}
+                  <article class="soft-row focus-secondary-row">
+                    <div>
+                      <p class="item-title"><a href="{% url 'cases:detail' assignment.case.public_id %}">{{ assignment.case.title }}</a></p>
+                      <p class="detail-note">{{ assignment.case.display_hint }}</p>
+                    </div>
+                    <div class="button-row">
+                      <form method="post" action="{% url 'focus:action' %}" class="inline-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="case_id" value="{{ assignment.case.public_id }}" />
+                        <input type="hidden" name="action" value="set_main" />
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+                        <button type="submit" class="button button-subtle">Make main</button>
+                      </form>
+                    </div>
+                  </article>
+                {% endfor %}
+              </div>
+            {% else %}
+              <p class="muted">No secondary Cases selected.</p>
+            {% endif %}
+          </div>
+        </div>
+      </article>
+
+      <article class="panel focus-setup" data-focus-setup>
+        <div class="section-head">
+          <div>
+            <p class="section-label">Rebalance</p>
+            <h3>Set today’s focus</h3>
+            <p class="muted">Change the three slots in one pass.</p>
+          </div>
+        </div>
+        <form method="post" class="stack">
+          {% csrf_token %}
+          <div class="field">
+            <label for="{{ form.main_case.id_for_label }}">Main Case</label>
+            {{ form.main_case }}
+            {% for error in form.main_case.errors %}
+              <p class="field-error">{{ error }}</p>
+            {% endfor %}
+          </div>
+          <div class="field">
+            <label for="{{ form.secondary_case_one.id_for_label }}">Secondary Case 1</label>
+            {{ form.secondary_case_one }}
+            {% for error in form.secondary_case_one.errors %}
+              <p class="field-error">{{ error }}</p>
+            {% endfor %}
+          </div>
+          <div class="field">
+            <label for="{{ form.secondary_case_two.id_for_label }}">Secondary Case 2</label>
+            {{ form.secondary_case_two }}
+            {% for error in form.secondary_case_two.errors %}
+              <p class="field-error">{{ error }}</p>
+            {% endfor %}
+          </div>
+          {% for error in form.non_field_errors %}
+            <p class="field-error">{{ error }}</p>
+          {% endfor %}
+          <div class="button-row">
+            <button type="submit" class="button">Save today’s focus</button>
+          </div>
+        </form>
+      </article>
+    </section>
+  </div>
+{% endblock %}
+
+{% block page_help_title %}Focus{% endblock %}
+
+{% block page_help %}
+  <p>Where you narrow the day. Pick one main Case, and up to two secondary tracks if they help.</p>
+  <ul>
+    <li><strong>Main.</strong> The single Case at the front. This is what the Board leads with.</li>
+    <li><strong>Secondary.</strong> Two optional supports you can switch to without losing the main.</li>
+    <li><strong>Rebalance.</strong> Set all three slots in one pass, or adjust a single one.</li>
+  </ul>
+  <p class="muted">Tip: if the main slot is empty, choose the Case that's easiest to resume right now.</p>
+{% endblock %}

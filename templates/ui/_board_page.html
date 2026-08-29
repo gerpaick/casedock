@@ -1,0 +1,113 @@
+<div id="board-page" data-board-page>
+  {% if inline_messages %}
+    {% include "ui/_messages.html" with message_scope_class="messages--inline messages--timed" message_duration=5000 %}
+  {% endif %}
+
+  <div class="surface-stack surface-stack--board" data-board-home>
+    {# SECTION 1: Page header #}
+    <section class="page-head page-head--board">
+      <div class="page-head__title-wrap">
+        <p class="eyebrow">Board</p>
+        <h2>Keep the right work in front.</h2>
+        <p class="page-copy">Start with focus. Keep active work close. Let the rest stay legible.</p>
+      </div>
+      <div class="meta-list meta-list--board">
+        <span class="pill">{{ active_count }} active</span>
+        <span class="muted">{{ waiting_count }} waiting</span>
+        <span class="muted">{{ done_count }} closed this week</span>
+      </div>
+    </section>
+
+    {# SECTION 2: Focus hero #}
+    <section class="panel board-focus-hero" data-board-focus-rail>
+      <div class="section-head board-focus-hero__head">
+        <div>
+          <p class="section-label">Today</p>
+          <h3>Daily focus</h3>
+          <p class="muted">One main Case. Two supporting tracks if they help.</p>
+        </div>
+        <a href="{% url 'focus:today' %}" class="button button-muted">Open Focus</a>
+      </div>
+
+      {% if focus_main_assignment %}
+        <div class="board-focus-row {{ board_focus_layout_class }}">
+          {% include "ui/_focus_card.html" with assignment=focus_main_assignment role_modifier="main" role_label="Main" title_classes="board-focus-card__title" %}
+
+          {% for assignment in focus_secondary_assignments %}
+            {% include "ui/_focus_card.html" with assignment=assignment role_modifier="secondary" role_label="Secondary" title_classes="item-title board-focus-card__secondary-title" %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <article class="subpanel board-focus-empty">
+          <p class="section-label">Today</p>
+          <h3>Nothing has the front yet.</h3>
+          <p class="detail-note">Pick one main Case and, if useful, up to two secondary Cases.</p>
+        </article>
+      {% endif %}
+    </section>
+
+    {# Transition prompt — previous main focus needs attention #}
+    {% if previous_main_case %}
+      <section class="panel board-transition-prompt">
+        <div class="section-head">
+          <div>
+            <p class="section-label">Previous focus</p>
+            <h3>"{{ previous_main_case.title }}" hasn't been updated since you focused on it.</h3>
+          </div>
+        </div>
+        <div class="board-transition-prompt__actions">
+          <form method="post" action="{% url 'cases:stale_action' previous_main_case.public_id %}" class="inline-form"
+            hx-post="{% url 'cases:stale_action' previous_main_case.public_id %}"
+            hx-target="#board-page" hx-swap="outerHTML">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="done" />
+            <button type="submit" class="button button-subtle">Done</button>
+          </form>
+          <form method="post" action="{% url 'cases:stale_action' previous_main_case.public_id %}" class="inline-form"
+            hx-post="{% url 'cases:stale_action' previous_main_case.public_id %}"
+            hx-target="#board-page" hx-swap="outerHTML">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="waiting" />
+            <button type="submit" class="button button-subtle">Move to waiting</button>
+          </form>
+          <a href="{% url 'ui:home' %}"
+            class="button button-quiet"
+            hx-get="{% url 'ui:home' %}"
+            hx-target="#board-page"
+            hx-swap="outerHTML">Still working</a>
+        </div>
+      </section>
+    {% endif %}
+
+    {# SECTION 3: Stale alerts — only if stale cases exist #}
+    {% if stale_cases %}
+      <section class="panel board-stale-section">
+        <div class="section-head">
+          <div>
+            <p class="section-label">Needs attention</p>
+            <h3>Stale Cases</h3>
+          </div>
+        </div>
+        <div class="soft-list board-stale-list">
+          {% for case in stale_cases %}
+            {% include "ui/_stale_case_row.html" %}
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+
+    {# SECTION 4: Stats + links #}
+    <section class="board-bottom-row">
+      <div class="board-bottom-links">
+        <a href="{% url 'ui:active' %}" class="board-bottom-link">
+          <span class="board-bottom-link__label">See all active</span>
+          <span class="muted">{{ active_count }}</span>
+        </a>
+        <a href="{% url 'ui:waiting' %}" class="board-bottom-link">
+          <span class="board-bottom-link__label">See waiting</span>
+          <span class="muted">{{ waiting_count }}</span>
+        </a>
+      </div>
+    </section>
+  </div>
+</div>

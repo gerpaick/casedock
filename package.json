@@ -1,0 +1,12 @@
+{
+  "name": "casedock",
+  "private": true,
+  "scripts": {
+    "dev:css": "npx @tailwindcss/cli -i static/ui/input.css -o static/ui/tailwind.css --watch",
+    "build:css": "npx @tailwindcss/cli -i static/ui/input.css -o static/ui/tailwind.css --minify"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.2.4",
+    "tailwindcss": "^4.2.4"
+  }
+}

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="220" viewBox="0 0 256 220" role="img" aria-label="Casedock logo">
+
+
+  <rect x="40" y="48" width="176" height="14" rx="4" fill="#FFFFFF"/>
+  <rect x="69" y="62" width="7" height="42" fill="#FFFFFF"/>
+  <rect x="124.5" y="62" width="7" height="42" fill="#FFFFFF"/>
+  <rect x="180" y="62" width="7" height="42" fill="#FFFFFF"/>
+  <rect x="54" y="100" width="38" height="72" rx="4" fill="none" stroke="#FFFFFF" stroke-width="8"/>
+  <rect x="109" y="100" width="38" height="72" rx="4" fill="none" stroke="#FFFFFF" stroke-width="8"/>
+  <rect x="164" y="100" width="38" height="72" rx="4" fill="none" stroke="#FFFFFF" stroke-width="8"/>
+  <rect x="66" y="122" width="16" height="5" rx="2.5" fill="#FFFFFF"/>
+  <rect x="66" y="140" width="16" height="5" rx="2.5" fill="#FFFFFF"/>
+  <rect x="66" y="158" width="16" height="5" rx="2.5" fill="#FFFFFF"/>
+  <rect x="121" y="122" width="16" height="5" rx="2.5" fill="#FFFFFF"/>
+  <rect x="121" y="140" width="16" height="5" rx="2.5" fill="#FFFFFF"/>
+  <rect x="121" y="158" width="16" height="5" rx="2.5" fill="#FFFFFF"/>
+  <rect x="176" y="122" width="16" height="5" rx="2.5" fill="#FFFFFF"/>
+  <rect x="176" y="140" width="16" height="5" rx="2.5" fill="#FFFFFF"/>
+  <rect x="176" y="158" width="16" height="5" rx="2.5" fill="#FFFFFF"/>
+
+</svg>

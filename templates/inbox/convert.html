@@ -1,0 +1,44 @@
+{% extends "ui/base.html" %}
+
+{% block title %}Convert to Case | {{ inbox_item.title }}{% endblock %}
+
+{% block content %}
+  <section class="page-head">
+    <div>
+      <p class="eyebrow">Convert to Case</p>
+      <h2>Shape this work before it spreads.</h2>
+    </div>
+    <p class="page-copy">Keep the handoff light. The goal is enough structure to continue cleanly later.</p>
+  </section>
+
+  <section class="panel prose-panel">
+    <h3>From Inbox</h3>
+    <p><strong>{{ inbox_item.title }}</strong></p>
+    {% if inbox_item.raw_body %}
+      <p class="muted">{{ inbox_item.raw_body|linebreaksbr }}</p>
+    {% endif %}
+  </section>
+
+  <section class="panel panel-form">
+    <form method="post" class="stack">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="field">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}
+            <p class="field-help">{{ field.help_text }}</p>
+          {% endif %}
+          {% if field.errors %}
+            <p class="field-error">{{ field.errors|join:", " }}</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <div class="button-row">
+        <button type="submit" class="button">Create Case</button>
+        <a href="{% url 'inbox:list' %}" class="button button-link">Cancel</a>
+      </div>
+    </form>
+  </section>
+{% endblock %}
+

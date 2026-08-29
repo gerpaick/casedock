@@ -1,0 +1,42 @@
+<div class="button-row">
+  {% if focus_assignment and focus_assignment.role == "main" %}
+    <form method="post" action="{% url 'focus:action' %}" class="inline-form">
+      {% csrf_token %}
+      <input type="hidden" name="case_id" value="{{ case.public_id }}" />
+      <input type="hidden" name="action" value="clear" />
+      <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+      <button type="submit" class="button button-subtle">Remove focus</button>
+    </form>
+  {% elif focus_assignment and focus_assignment.role == "secondary" %}
+    <form method="post" action="{% url 'focus:action' %}" class="inline-form">
+      {% csrf_token %}
+      <input type="hidden" name="case_id" value="{{ case.public_id }}" />
+      <input type="hidden" name="action" value="set_main" />
+      <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+      <button type="submit" class="button">Set main</button>
+    </form>
+    <form method="post" action="{% url 'focus:action' %}" class="inline-form">
+      {% csrf_token %}
+      <input type="hidden" name="case_id" value="{{ case.public_id }}" />
+      <input type="hidden" name="action" value="clear" />
+      <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+      <button type="submit" class="button button-subtle">Remove focus</button>
+    </form>
+  {% else %}
+    <form method="post" action="{% url 'focus:action' %}" class="inline-form">
+      {% csrf_token %}
+      <input type="hidden" name="case_id" value="{{ case.public_id }}" />
+      <input type="hidden" name="action" value="set_main" />
+      <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+      <button type="submit" class="button">Set main</button>
+    </form>
+    <form method="post" action="{% url 'focus:action' %}" class="inline-form">
+      {% csrf_token %}
+      <input type="hidden" name="case_id" value="{{ case.public_id }}" />
+      <input type="hidden" name="action" value="add_secondary" />
+      <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+      <button type="submit" class="button button-subtle">Add secondary</button>
+    </form>
+  {% endif %}
+  <a href="{% url 'focus:today' %}" class="button button-link">Open Focus</a>
+</div>

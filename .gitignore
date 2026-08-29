@@ -1,0 +1,24 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+!.env.prod.example
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.venv/
+__pycache__/
+db.sqlite3
+node_modules/
+static/ui/tailwind.css
+staticfiles/
+
+# Local agent / editor scratch
+.opencode/
+.sisyphus/
+.agents/
+.superdesign/
+.cursor/
+__temp/
+skills-lock.json
+

@@ -1,0 +1,23 @@
+<article class="subpanel">
+  <div class="item-card__meta">
+    {% if decision.promoted %}
+      <span class="pill">Promoted</span>
+    {% endif %}
+    {% if decision.tag %}
+      <span class="muted">{{ decision.tag }}</span>
+    {% endif %}
+  </div>
+  {% if decision.title %}
+    <p class="item-title">{{ decision.title }}</p>
+  {% endif %}
+  <p class="muted">{{ decision.body }}</p>
+  {% if decision.rationale %}
+    <p class="detail-note"><strong>Rationale:</strong> {{ decision.rationale }}</p>
+  {% endif %}
+  {% if decision.alternatives %}
+    <p class="detail-note"><strong>Alternatives:</strong> {{ decision.alternatives }}</p>
+  {% endif %}
+  {% if decision.consequence %}
+    <p class="detail-note"><strong>Consequence:</strong> {{ decision.consequence }}</p>
+  {% endif %}
+</article>

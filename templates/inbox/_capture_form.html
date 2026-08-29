@@ -1,0 +1,52 @@
+<form
+  action="{% url 'inbox:capture' %}"
+  method="post"
+  class="stack capture-entry-form"
+  {% if capture_origin == "inbox" %}
+    hx-post="{% url 'inbox:capture' %}"
+    hx-target="#inbox-page"
+    hx-swap="outerHTML"
+    data-inbox-focus-return="capture-trigger"
+  {% endif %}
+>
+  {% csrf_token %}
+  <input type="hidden" name="capture_origin" value="{{ capture_origin }}" />
+  {% if capture_origin == "inbox" and selected_item %}
+    <input type="hidden" name="selected" value="{{ selected_item.public_id }}" />
+  {% endif %}
+
+  <div class="field">
+    <label for="{{ capture_form.title.id_for_label }}">{{ capture_form.title.label }}</label>
+    {{ capture_form.title }}
+    {% if capture_form.title.errors %}
+      <p class="field-error">{{ capture_form.title.errors|join:", " }}</p>
+    {% endif %}
+  </div>
+
+  <div class="field">
+    <label for="{{ capture_form.raw_body.id_for_label }}">{{ capture_form.raw_body.label }}</label>
+    {{ capture_form.raw_body }}
+    <p class="field-help">Optional context.</p>
+    {% if capture_form.raw_body.errors %}
+      <p class="field-error">{{ capture_form.raw_body.errors|join:", " }}</p>
+    {% endif %}
+  </div>
+
+  <div class="field">
+    <label for="{{ capture_form.source_url.id_for_label }}">{{ capture_form.source_url.label }}</label>
+    {{ capture_form.source_url }}
+    <p class="field-help">Optional link.</p>
+    {% if capture_form.source_url.errors %}
+      <p class="field-error">{{ capture_form.source_url.errors|join:", " }}</p>
+    {% endif %}
+  </div>
+
+  <div class="button-row">
+    <button type="submit" class="button">Capture to Inbox</button>
+    {% if cancel_mode == "modal" %}
+      <button type="button" class="button button-link" data-modal-dismiss>Cancel</button>
+    {% else %}
+      <a href="{% url 'inbox:list' %}" class="button button-link">Back to Inbox</a>
+    {% endif %}
+  </div>
+</form>

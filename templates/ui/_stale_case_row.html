@@ -1,0 +1,33 @@
+<article class="soft-row board-stale-row">
+  <div class="board-stale-row__body">
+    <p class="item-title">
+      <a href="{% url 'cases:detail' case.public_id %}">{{ case.title }}</a>
+    </p>
+    <p class="detail-note">Untouched for {{ case.days_stale }} days.</p>
+  </div>
+  <div class="board-stale-row__actions">
+    <form method="post" action="{% url 'cases:stale_action' case.public_id %}" class="inline-form"
+      hx-post="{% url 'cases:stale_action' case.public_id %}"
+      hx-target="#board-page" hx-swap="outerHTML">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="done" />
+      <button type="submit" class="button button-subtle">Done</button>
+    </form>
+    <form method="post" action="{% url 'cases:stale_action' case.public_id %}" class="inline-form"
+      hx-post="{% url 'cases:stale_action' case.public_id %}"
+      hx-target="#board-page" hx-swap="outerHTML">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="waiting" />
+      <button type="submit" class="button button-subtle">Move to waiting</button>
+    </form>
+    {% if case.can_ack %}
+      <form method="post" action="{% url 'cases:stale_action' case.public_id %}" class="inline-form"
+        hx-post="{% url 'cases:stale_action' case.public_id %}"
+        hx-target="#board-page" hx-swap="outerHTML">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="ack" />
+        <button type="submit" class="button button-quiet">Still active</button>
+      </form>
+    {% endif %}
+  </div>
+</article>

@@ -1,0 +1,47 @@
+<section class="inbox-history" aria-labelledby="recent-outcomes-title">
+  <div class="section-head inbox-history__head">
+    <div class="inbox-history__heading">
+      <p class="section-label">History</p>
+      <div class="inbox-history__headline">
+        <h3 id="recent-outcomes-title">Recent outcomes</h3>
+        <div class="inbox-history__meta" aria-label="{{ recent_outcomes_count }} recent outcomes">
+          <span class="count-badge count-badge--history">{{ recent_outcomes_count }}</span>
+          <span class="inbox-history__metric muted">{{ converted_count }} shaped</span>
+          <span class="inbox-history__metric muted">{{ done_count }} handled</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if recent_outcomes %}
+    <div class="soft-list history-list">
+      {% for inbox_item in recent_outcomes %}
+        <article class="soft-row history-row">
+          <div class="history-row__main">
+            {% if inbox_item.triage_state == "converted" %}
+              <span class="history-tag">Converted</span>
+              <p class="history-row__title">
+                <a href="{% url 'cases:detail' inbox_item.converted_case.public_id %}" class="history-row__title-link">
+                  {{ inbox_item.title }}
+                </a>
+              </p>
+            {% else %}
+              <span class="history-tag history-tag--done">Done now</span>
+              <p class="history-row__title">{{ inbox_item.title }}</p>
+            {% endif %}
+          </div>
+          <p class="history-row__meta">{{ inbox_item.updated_at|timesince }} ago</p>
+        </article>
+      {% endfor %}
+      {% if recent_outcomes_has_more %}
+        <article class="soft-row history-row history-row--more">
+          <p class="muted">Older outcomes stay in history.</p>
+        </article>
+      {% endif %}
+    </div>
+  {% else %}
+    <article class="soft-row history-row">
+      <p class="muted">No recent outcomes yet.</p>
+    </article>
+  {% endif %}
+</section>

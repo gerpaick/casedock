@@ -1,0 +1,20 @@
+<dialog
+  id="capture-modal"
+  class="capture-modal"
+  data-modal
+  data-open-on-load="{% if capture_modal_open %}true{% else %}false{% endif %}"
+  data-return-focus="quick-capture-trigger"
+  aria-labelledby="capture-modal-title"
+>
+  <div class="capture-modal__frame">
+    <div class="capture-modal__header">
+      <div>
+        <p class="eyebrow">Quick capture</p>
+        <h3 id="capture-modal-title">Capture it quickly.</h3>
+        <p class="muted">Start with a title. Add more only if it helps.</p>
+      </div>
+      <button type="button" class="button button-link" data-modal-dismiss>Close</button>
+    </div>
+    {% include "inbox/_capture_form.html" with capture_origin="inbox" cancel_mode="modal" %}
+  </div>
+</dialog>

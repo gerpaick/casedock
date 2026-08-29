@@ -1,0 +1,44 @@
+{% extends "ui/base.html" %}
+
+{% block title %}Do now | {{ inbox_item.title }}{% endblock %}
+
+{% block content %}
+  <section class="page-head">
+    <div>
+      <p class="eyebrow">Do now</p>
+      <h2>{{ inbox_item.title }}</h2>
+    </div>
+    <p class="page-copy">Use this path for quick work that should be handled without turning into a full Case.</p>
+  </section>
+
+  <section class="panel prose-panel">
+    <h3>Current context</h3>
+    {% if inbox_item.raw_body %}
+      <p>{{ inbox_item.raw_body|linebreaksbr }}</p>
+    {% else %}
+      <p class="muted">No extra context was captured. Keep it simple.</p>
+    {% endif %}
+  </section>
+
+  <section class="panel panel-form">
+    <h3>Completion note</h3>
+    <form method="post" class="stack">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="field">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}
+            <p class="field-error">{{ field.errors|join:", " }}</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <div class="button-row">
+        <button type="submit" class="button">Mark done</button>
+        <a href="{% url 'inbox:convert' inbox_item.public_id %}" class="button button-muted">Promote to Case</a>
+        <a href="{% url 'inbox:list' %}" class="button button-link">Back to Inbox</a>
+      </div>
+    </form>
+  </section>
+{% endblock %}
+

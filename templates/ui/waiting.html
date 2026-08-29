@@ -1,0 +1,54 @@
+{% extends "ui/base.html" %}
+
+{% block title %}casedock | Waiting{% endblock %}
+
+{% block content %}
+  <div class="surface-stack">
+    <section class="page-head">
+      <div class="page-head__title-wrap">
+        <p class="eyebrow">Cases</p>
+        <h2>Waiting</h2>
+        <p class="page-copy">Cases where the next step is not on you.</p>
+      </div>
+      <div class="meta-list">
+        <span class="muted">{{ waiting_count }} waiting</span>
+      </div>
+    </section>
+
+    {% if waiting_cases %}
+      <div class="soft-list board-rail-list">
+        {% for case in waiting_cases %}
+          <article class="soft-row board-rail-row">
+            <p class="item-title"><a href="{% url 'cases:detail' case.public_id %}">{{ case.title }}</a></p>
+            <p class="detail-note">{{ case.display_hint }}</p>
+            <div class="board-active-row__meta">
+              <span class="muted">{{ case.get_effort_display }}</span>
+              <span class="muted">{{ case.get_work_type_display }}</span>
+              {% if case.focus_role %}
+                <span class="muted">{{ case.focus_role|title }} focus</span>
+              {% endif %}
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <article class="subpanel">
+        <p class="section-label">Waiting</p>
+        <h3>Nothing is waiting right now.</h3>
+        <p class="detail-note">All clear.</p>
+      </article>
+    {% endif %}
+  </div>
+{% endblock %}
+
+{% block page_help_title %}Waiting{% endblock %}
+
+{% block page_help %}
+  <p>Cases where the next step isn't yours. They stay off the Board so today stays clear.</p>
+  <ul>
+    <li><strong>What lives here.</strong> Work waiting on a reply, a dependency, or the right moment.</li>
+    <li><strong>Order.</strong> Most recently touched first.</li>
+    <li><strong>Focus badges.</strong> A waiting Case can still hold a focus slot.</li>
+  </ul>
+  <p class="muted">Tip: when a Case unblocks, open it and move it back to Active.</p>
+{% endblock %}

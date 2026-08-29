@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}casedock{% endblock %}</title>
+    <link rel="icon" href="{% static 'casedock/favicon.ico' %}" />
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'casedock/favicon-32x32.png' %}" />
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'casedock/favicon-16x16.png' %}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'casedock/favicon-180x180.png' %}" />
+    <link rel="manifest" href="{% static 'casedock/site.webmanifest' %}" />
+    <link rel="stylesheet" href="{% static 'casedock/casedock-brand.css' %}" />
+    <script>
+      document.documentElement.classList.add("js");
+    </script>
+    <link rel="stylesheet" href="{% static 'ui/tailwind.css' %}?v=20260527-shell-960" />
+    {% block extra_head %}{% endblock %}
+    <script src="{% static 'vendor/htmx.min.js' %}?v=20260406-inbox-htmx" defer></script>
+    {% block extra_scripts %}{% endblock %}
+    <script src="{% static 'ui/app.js' %}?v=20260406-inbox-messages-1" defer></script>
+  </head>
+  <body class="display-mode-{{ display_mode }}">
+    <div class="shell">
+      <header class="topbar">
+        <div class="topbar-brand">
+          <a href="{% url 'ui:home' %}">
+            <img
+              class="casedock-logo"
+              src="{% static 'casedock/casedock-logo-horizontal-light.svg' %}"
+              alt="Casedock"
+              width="490"
+              height="96"
+            />
+          </a>
+        </div>
+        <div class="topbar-actions">
+          {% if user.is_authenticated %}
+            <nav class="nav" aria-label="Primary">
+              <a href="{% url 'ui:home' %}" class="{% if request.resolver_match.view_name == 'ui:home' or request.resolver_match.namespace == 'cases' %}is-active{% endif %}">Board</a>
+              <a href="{% url 'ui:active' %}" class="{% if request.resolver_match.view_name == 'ui:active' %}is-active{% endif %}">Active</a>
+              <a
+                href="{% url 'inbox:list' %}"
+                class="{% if request.resolver_match.namespace == 'inbox' %}is-active{% endif %}"
+                {% if inbox_to_address_count %}aria-label="Inbox, {{ inbox_to_address_count }} to address"{% endif %}
+              >
+                <span>Inbox</span>
+                {% if inbox_to_address_count %}
+                  <span class="count-badge count-badge--nav" aria-hidden="true">{{ inbox_to_address_count }}</span>
+                {% endif %}
+              </a>
+              <a href="{% url 'focus:today' %}" class="{% if request.resolver_match.namespace == 'focus' %}is-active{% endif %}">Focus</a>
+              <a href="{% url 'ui:search' %}" class="{% if request.resolver_match.view_name == 'ui:search' %}is-active{% endif %}">Search</a>
+              <a href="{% url 'ui:settings' %}" class="{% if request.resolver_match.view_name == 'ui:settings' %}is-active{% endif %}">Settings</a>
+            </nav>
+            <div class="topbar-user">
+              <form method="post" action="{% url 'logout' %}" class="inline-form">
+                {% csrf_token %}
+                <button type="submit" class="button button-quiet">Sign out</button>
+              </form>
+            </div>
+          {% endif %}
+        </div>
+      </header>
+      {% if request.resolver_match.namespace == "inbox" %}
+        {% include "ui/_messages.html" with message_scope_class="messages--timed" message_duration=5000 %}
+      {% else %}
+        {% include "ui/_messages.html" %}
+      {% endif %}
+      <main>
+        {% block content %}{% endblock %}
+      </main>
+      <footer class="site-footer">
+        <p class="site-footer__copy">&copy; 2026 casedock</p>
+        <nav class="site-footer__links" aria-label="Footer">
+          <a href="#" data-modal-trigger="keyboard-shortcuts-modal">Keyboard shortcuts</a>
+          <a href="{% url 'help' %}">Help</a>
+          <a href="{% url 'privacy' %}">Privacy</a>
+          <a href="{% url 'terms' %}">Terms</a>
+        </nav>
+      </footer>
+      {% include "ui/_keyboard_shortcuts.html" %}
+      {% if user.is_authenticated %}
+        {% include "inbox/_global_quick_capture.html" %}
+      {% endif %}
+
+      <dialog
+        id="page-help-modal"
+        class="page-help-modal"
+        data-modal
+        aria-labelledby="page-help-modal-title"
+      >
+        <div class="page-help-modal__frame">
+          <div class="page-help-modal__header">
+            <div>
+              <p class="eyebrow">This page</p>
+              <h3 id="page-help-modal-title">{% block page_help_title %}Page guide{% endblock %}</h3>
+            </div>
+            <button type="button" class="button button-link" data-modal-dismiss>Close</button>
+          </div>
+          <div class="page-help-modal__body">
+            {% block page_help %}
+              <p class="muted">No specific guide for this page yet.</p>
+            {% endblock %}
+          </div>
+        </div>
+      </dialog>
+    </div>
+  </body>
+</html>

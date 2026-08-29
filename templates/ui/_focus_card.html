@@ -1,0 +1,37 @@
+<article class="subpanel board-focus-card board-focus-card--{{ role_modifier }}">
+  <div class="item-card__meta board-focus-card__meta">
+    <div class="board-focus-card__meta-main">
+      <span class="pill">{{ role_label }}</span>
+      {% if assignment.case.status != "active" %}
+        <span class="muted">{{ assignment.case.get_status_display }}</span>
+      {% endif %}
+    </div>
+    <form
+      method="post"
+      action="{% url 'focus:action' %}"
+      class="inline-form board-focus-card__remove-form"
+      hx-post="{% url 'focus:action' %}"
+      hx-target="#board-page"
+      hx-swap="outerHTML"
+    >
+      {% csrf_token %}
+      <input type="hidden" name="case_id" value="{{ assignment.case.public_id }}" />
+      <input type="hidden" name="action" value="clear" />
+      <input type="hidden" name="surface" value="board" />
+      <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+      <button type="submit" class="board-focus-card__remove button-quiet">
+        <span class="board-focus-card__remove-icon" aria-hidden="true">&times;</span>
+        <span>Remove focus</span>
+      </button>
+    </form>
+  </div>
+  <p class="{{ title_classes }} board-focus-card__title--clamped board-focus-card__title--{{ role_modifier }}">
+    {{ assignment.case.title }}
+  </p>
+  <p class="detail-note board-focus-card__note board-focus-card__note--clamped board-focus-card__note--{{ role_modifier }}">
+    {{ assignment.case.display_hint }}
+  </p>
+  <div class="button-row board-focus-card__actions">
+    <a href="{% url 'cases:detail' assignment.case.public_id %}" class="board-focus-card__details">Details</a>
+  </div>
+</article>

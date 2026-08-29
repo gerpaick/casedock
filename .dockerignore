@@ -1,0 +1,53 @@
+# VCS / OS metadata
+.git
+.gitignore
+.DS_Store
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Local env / secrets — NEVER bake into image
+.env
+.env.*
+!.env.example
+
+# Local SQLite
+db.sqlite3
+db.sqlite3-journal
+
+# Built artifacts (rebuilt inside container from input.css)
+static/ui/tailwind.css
+staticfiles/
+
+# Docker configs (not needed inside image)
+Dockerfile
+.dockerignore
+docker-compose*.yml
+
+# Project scratch (not needed in image)
+__temp/
+.sisyphus/
+.opencode/
+casedock_brand_assets/
+docs/plan/
+docs/research/
+docs/decisions/
+scripts/
+tests/
+
+# IDE
+.idea/
+.vscode/
+*.swp

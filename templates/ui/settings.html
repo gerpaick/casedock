@@ -1,0 +1,33 @@
+{% extends "ui/base.html" %}
+
+{% block title %}casedock | Settings{% endblock %}
+
+{% block content %}
+  <div class="surface-stack surface-stack--settings">
+    <section class="page-head page-head--settings">
+      <div class="page-head__title-wrap">
+        <p class="eyebrow">Settings</p>
+        <h2>Keep configuration quiet.</h2>
+        <p class="page-copy">Only the settings that shape the shell belong here for now.</p>
+      </div>
+    </section>
+
+    <section class="panel settings-surface">
+      <div class="section-head">
+        <div>
+          <p class="section-label">Display</p>
+          <h3>Display mode</h3>
+          <p class="muted">Density changes. Workflow does not.</p>
+        </div>
+        <span class="pill">{{ display_mode|title }}</span>
+      </div>
+      <form method="post" action="{% url 'ui:display_mode' %}" class="button-row">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+        <button type="submit" name="display_mode" value="calm" class="button button-muted">Calm</button>
+        <button type="submit" name="display_mode" value="compact" class="button button-muted">Compact</button>
+      </form>
+      <p class="detail-note">Board, Inbox, Focus, Search, and the Case workspace should keep the same structure in either mode.</p>
+    </section>
+  </div>
+{% endblock %}

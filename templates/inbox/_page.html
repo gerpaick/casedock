@@ -1,0 +1,43 @@
+<div
+  id="inbox-page"
+  data-inbox-page
+  {% if capture_landed_in %}data-capture-landed-in="{{ capture_landed_in }}"{% endif %}
+>
+  {% if inline_messages %}
+    {% include "ui/_messages.html" with message_scope_class="messages--inline messages--timed" message_duration=5000 %}
+  {% endif %}
+
+  <section class="page-head page-head--inbox">
+    <div class="page-head__top page-head__top--inbox">
+      <div class="page-head__title-wrap">
+        <h2>Triage what came in.</h2>
+      </div>
+      <a
+        href="{% url 'inbox:capture_page' %}"
+        class="button button-capture page-head__action page-head__action--inbox"
+        id="quick-capture-trigger"
+        data-modal-trigger="capture-modal"
+      >
+        New Capture
+      </a>
+    </div>
+    <div class="meta-list meta-list--inbox">
+      <span class="pill">{{ ready_count }} to address</span>
+      <span class="muted">{{ converted_count }} shaped</span>
+      <span class="muted">{{ done_count }} handled</span>
+    </div>
+  </section>
+
+  {% include "inbox/_quick_capture.html" %}
+
+  <section class="inbox-stage inbox-stage--structured">
+    <aside class="inbox-stage__queue" data-capture-destination="queue">
+      {% include "inbox/_queue.html" %}
+    </aside>
+    <div class="inbox-stage__focus" data-capture-destination="now">
+      {% include "inbox/_focus_panel.html" %}
+    </div>
+  </section>
+
+  {% include "inbox/_history_sections.html" %}
+</div>

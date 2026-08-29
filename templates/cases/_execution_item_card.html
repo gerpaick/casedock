@@ -1,0 +1,19 @@
+<article class="subpanel">
+  <div class="section-head">
+    <div>
+      <p class="item-title">{{ item.title }}</p>
+      <p class="muted">
+        {% if item.section %}{{ item.section }}{% else %}General{% endif %}
+        · {{ item.get_state_display }}
+      </p>
+    </div>
+    <form method="post" action="{% url 'cases:execution_state_update' case.public_id item.public_id %}" class="inline-form">
+      {% csrf_token %}
+      <input type="hidden" name="state" value="{{ action_state }}" />
+      <button type="submit" class="button button-subtle">{{ action_label }}</button>
+    </form>
+  </div>
+  {% if show_note and item.note %}
+    <p class="detail-note">{{ item.note }}</p>
+  {% endif %}
+</article>

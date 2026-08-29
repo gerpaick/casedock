@@ -1,0 +1,44 @@
+{% extends "ui/base.html" %}
+
+{% block title %}{{ inbox_item.title }} | Inbox{% endblock %}
+
+{% block content %}
+  <section class="page-head">
+    <div>
+      <p class="eyebrow">Inbox Item</p>
+      <h2>{{ inbox_item.title }}</h2>
+    </div>
+    <div class="meta-list">
+      <span class="pill">{{ inbox_item.get_triage_state_display }}</span>
+    </div>
+  </section>
+
+  <section class="panel prose-panel">
+    <h3>Raw context</h3>
+    {% include "inbox/_source_chip.html" with item=inbox_item extra_class="source-chip--detail" %}
+    {% if inbox_item.raw_body %}
+      <p>{{ inbox_item.raw_body|linebreaksbr }}</p>
+    {% else %}
+      <p class="muted">No extra context was captured.</p>
+    {% endif %}
+  </section>
+
+  <section class="button-row">
+    {% if inbox_item.triage_state != "converted" %}
+      <form action="{% url 'inbox:triage' inbox_item.public_id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="do_now" />
+        <button type="submit" class="button">Do now</button>
+      </form>
+      <a href="{% url 'inbox:convert' inbox_item.public_id %}" class="button button-muted">Convert to Case</a>
+    {% endif %}
+    {% if inbox_item.triage_state != "archived" %}
+      <form action="{% url 'inbox:triage' inbox_item.public_id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="archive" />
+        <button type="submit" class="button button-link">Archive</button>
+      </form>
+    {% endif %}
+    <a href="{% url 'inbox:list' %}" class="button button-link">Back to Inbox</a>
+  </section>
+{% endblock %}

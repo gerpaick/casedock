@@ -1,0 +1,340 @@
+{% extends "ui/base.html" %}
+
+{% block title %}{{ case.title }} | Case{% endblock %}
+
+{% block content %}
+  <div class="surface-stack surface-stack--case" data-case-workspace>
+    <section class="page-head page-head--case">
+      <div class="page-head__title-wrap">
+        <p class="eyebrow">Case</p>
+        <h2>{{ case.title }}</h2>
+        <p class="page-copy">Keep the thread understandable in one place, then move it forward.</p>
+      </div>
+      <div class="meta-list meta-list--case">
+        <span class="pill">{{ case.get_status_display }}</span>
+        <span class="muted">{{ case.get_clarity_display }}</span>
+        <span class="muted">{{ case.get_effort_display }}</span>
+        <span class="muted">{{ case.get_work_type_display }}</span>
+      </div>
+    </section>
+
+    <section id="overview" class="case-entry">
+      <article class="panel case-entry__primary" data-case-overview>
+        <div class="section-head">
+          <div>
+            <p class="section-label">Resume</p>
+            <h3>Where this stands</h3>
+          </div>
+          <a href="{% url 'inbox:list' %}" class="button button-link">Back to Inbox</a>
+        </div>
+        <div class="case-entry__grid">
+          <div class="case-entry__summary">
+            <div class="case-callout">
+              <p class="section-label">Next step</p>
+              <p class="case-callout__body">{{ case.display_hint }}</p>
+            </div>
+            <div>
+              <p class="section-label">Summary</p>
+              <p class="detail-note">{{ case.summary|default:"No summary yet." }}</p>
+            </div>
+          </div>
+          <div class="case-entry__metrics">
+            <div class="subpanel case-metric">
+              <p class="section-label">Execution</p>
+              <p class="item-title">{{ done_execution_items|length }} done / {{ execution_items|length }} total</p>
+            </div>
+            <div class="subpanel case-metric">
+              <p class="section-label">Focus</p>
+              <p class="item-title">
+                {% if focus_assignment %}
+                  {{ focus_assignment.get_role_display }} today
+                {% else %}
+                  Not in focus
+                {% endif %}
+              </p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <aside class="case-entry__side">
+        <article class="panel case-action-panel">
+          <div class="section-head">
+            <div>
+              <p class="section-label">Move</p>
+              <h3>Status</h3>
+            </div>
+          </div>
+          <form method="post" action="{% url 'cases:status_update' case.public_id %}" class="stack">
+            {% csrf_token %}
+            <div class="field">
+              <label for="{{ status_form.status.id_for_label }}">Case state</label>
+              {{ status_form.status }}
+              {% for error in status_form.status.errors %}
+                <p class="field-error">{{ error }}</p>
+              {% endfor %}
+            </div>
+            <div class="button-row">
+              <button type="submit" class="button">Update status</button>
+            </div>
+          </form>
+        </article>
+
+        <article class="panel case-action-panel">
+          <div class="section-head">
+            <div>
+              <p class="section-label">Today</p>
+              <h3>Focus</h3>
+            </div>
+          </div>
+          <p class="detail-note">
+            {% if focus_assignment %}
+              {{ focus_assignment.get_role_display }} for today.
+            {% else %}
+              Not in today’s focus yet.
+            {% endif %}
+          </p>
+          <div class="button-row">
+            {% include "cases/_focus_actions.html" %}
+          </div>
+        </article>
+      </aside>
+    </section>
+
+    <section id="spec" class="panel prose-panel case-spec">
+      <div class="section-head">
+        <div>
+          <p class="section-label">Working context</p>
+          <h3>Spec</h3>
+          <p class="muted">Markdown-first notes for the shape of the work.</p>
+        </div>
+      </div>
+      <form method="post" action="{% url 'cases:spec_update' case.public_id %}" class="stack">
+        {% csrf_token %}
+        <div class="field">
+          <label for="{{ spec_form.markdown_body.id_for_label }}">Markdown</label>
+          {{ spec_form.markdown_body }}
+          {% for error in spec_form.markdown_body.errors %}
+            <p class="field-error">{{ error }}</p>
+          {% endfor %}
+        </div>
+        <div class="button-row">
+          <button type="submit" class="button">Save spec</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="case-workbench">
+      <div class="case-main stack">
+        <section id="execution" class="panel case-section">
+          <div class="section-head">
+            <div>
+              <p class="section-label">Movement</p>
+              <h3>Execution</h3>
+              <p class="muted">Practical movement, not task-manager sprawl.</p>
+            </div>
+          </div>
+          <div class="case-section__split">
+            <div class="case-section__column">
+              <div class="section-head">
+                <h3>Current work</h3>
+                <span class="muted">{{ open_execution_items|length }} open</span>
+              </div>
+              {% if open_execution_items %}
+                <div class="stack">
+                  {% for item in open_execution_items %}
+                    {% include "cases/_execution_item_card.html" with action_state="done" action_label="Mark done" show_note=True %}
+                  {% endfor %}
+                </div>
+              {% else %}
+                <p class="muted">No open execution items.</p>
+              {% endif %}
+
+              <div class="section-head section-gap">
+                <h3>Done</h3>
+                <span class="muted">{{ done_execution_items|length }}</span>
+              </div>
+              {% if done_execution_items %}
+                <div class="stack">
+                  {% for item in done_execution_items %}
+                    {% include "cases/_execution_item_card.html" with action_state="todo" action_label="Reopen" show_note=False %}
+                  {% endfor %}
+                </div>
+              {% else %}
+                <p class="muted">Nothing finished yet.</p>
+              {% endif %}
+            </div>
+
+            <div class="case-section__column case-section__column--form">
+              <div class="section-head">
+                <h3>Add execution item</h3>
+              </div>
+              <form method="post" action="{% url 'cases:execution_create' case.public_id %}" class="stack">
+                {% csrf_token %}
+                <div class="field">
+                  <label for="{{ execution_form.title.id_for_label }}">Item</label>
+                  {{ execution_form.title }}
+                  {% for error in execution_form.title.errors %}
+                    <p class="field-error">{{ error }}</p>
+                  {% endfor %}
+                </div>
+                <div class="field">
+                  <label for="{{ execution_form.section.id_for_label }}">Section</label>
+                  {{ execution_form.section }}
+                </div>
+                <div class="field">
+                  <label for="{{ execution_form.note.id_for_label }}">Note</label>
+                  {{ execution_form.note }}
+                </div>
+                <div class="field">
+                  <label for="{{ execution_form.state.id_for_label }}">Starting state</label>
+                  {{ execution_form.state }}
+                </div>
+                <div class="button-row">
+                  <button type="submit" class="button">Add execution item</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <section id="decisions" class="panel case-section">
+          <div class="section-head">
+            <div>
+              <p class="section-label">Narrowing</p>
+              <h3>Decisions</h3>
+              <p class="muted">Capture quick choices or promote the ones that matter.</p>
+            </div>
+          </div>
+          <div class="case-section__split">
+            <div class="case-section__column case-section__column--form">
+              <form method="post" action="{% url 'cases:decision_create' case.public_id %}" class="stack">
+                {% csrf_token %}
+                <div class="field">
+                  <label for="{{ decision_form.body.id_for_label }}">Decision</label>
+                  {{ decision_form.body }}
+                  {% for error in decision_form.body.errors %}
+                    <p class="field-error">{{ error }}</p>
+                  {% endfor %}
+                </div>
+                <div class="field-checkbox">
+                  <label for="{{ decision_form.promoted.id_for_label }}">{{ decision_form.promoted }} Promote this decision</label>
+                </div>
+                <div class="field">
+                  <label for="{{ decision_form.title.id_for_label }}">Title</label>
+                  {{ decision_form.title }}
+                  {% for error in decision_form.title.errors %}
+                    <p class="field-error">{{ error }}</p>
+                  {% endfor %}
+                </div>
+                <div class="field">
+                  <label for="{{ decision_form.tag.id_for_label }}">Tag</label>
+                  {{ decision_form.tag }}
+                </div>
+                <div class="field">
+                  <label for="{{ decision_form.rationale.id_for_label }}">Rationale</label>
+                  {{ decision_form.rationale }}
+                </div>
+                <div class="field">
+                  <label for="{{ decision_form.alternatives.id_for_label }}">Alternatives</label>
+                  {{ decision_form.alternatives }}
+                </div>
+                <div class="field">
+                  <label for="{{ decision_form.consequence.id_for_label }}">Consequence</label>
+                  {{ decision_form.consequence }}
+                </div>
+                {% for error in decision_form.non_field_errors %}
+                  <p class="field-error">{{ error }}</p>
+                {% endfor %}
+                <div class="button-row">
+                  <button type="submit" class="button">Add decision</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="case-section__column">
+              <div class="section-head">
+                <h3>Recent decisions</h3>
+                <span class="muted">{{ recent_decisions|length }} shown</span>
+              </div>
+              {% if recent_decisions %}
+                <div class="stack">
+                  {% for decision in recent_decisions %}
+                    {% include "cases/_decision_card.html" %}
+                  {% endfor %}
+                </div>
+              {% else %}
+                <p class="muted">No decisions recorded yet.</p>
+              {% endif %}
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <aside class="case-side stack">
+        <section class="panel case-side-panel">
+          <div class="section-head">
+            <div>
+              <p class="section-label">Reference</p>
+              <h3>Links</h3>
+            </div>
+          </div>
+          {% if case.source_links.all %}
+            <ul class="plain-list">
+              {% for source_link in case.source_links.all %}
+                <li>
+                  {% if source_link.external_url %}
+                    <a href="{{ source_link.external_url }}">{{ source_link.external_title_snapshot|default:source_link.external_url }}</a>
+                  {% else %}
+                    {{ source_link.get_provider_display }}
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="muted">No source links attached.</p>
+          {% endif %}
+        </section>
+
+        <section id="private" class="panel case-side-panel case-private">
+          <div class="section-head">
+            <div>
+              <p class="section-label">Private</p>
+              <h3>Notes</h3>
+              <p class="muted">User-only thought space. Never synced by default.</p>
+            </div>
+          </div>
+          <form method="post" action="{% url 'cases:private_note_create' case.public_id %}" class="stack">
+            {% csrf_token %}
+            <div class="field">
+              <label for="{{ private_note_form.body.id_for_label }}">Private note</label>
+              {{ private_note_form.body }}
+              {% for error in private_note_form.body.errors %}
+                <p class="field-error">{{ error }}</p>
+              {% endfor %}
+            </div>
+            <div class="button-row">
+              <button type="submit" class="button">Save private note</button>
+            </div>
+          </form>
+
+          <div class="section-head section-gap">
+            <h3>Recent private notes</h3>
+            <span class="muted">{{ private_notes|length }}</span>
+          </div>
+          {% if private_notes %}
+            <div class="stack">
+              {% for note in private_notes %}
+                <article class="subpanel">
+                  <p class="detail-note">{{ note.body }}</p>
+                </article>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p class="muted">No private notes yet.</p>
+          {% endif %}
+        </section>
+      </aside>
+    </section>
+  </div>
+{% endblock %}

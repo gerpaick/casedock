@@ -1,0 +1,19 @@
+{% extends "ui/base.html" %}
+
+{% block title %}casedock | Board{% endblock %}
+
+{% block content %}
+  {% include "ui/_board_page.html" %}
+{% endblock %}
+
+{% block page_help_title %}Board{% endblock %}
+
+{% block page_help %}
+  <p>Your daily action surface. What matters now sits up front; the rest stays one click away.</p>
+  <ul>
+    <li><strong>Daily focus.</strong> The one Case you chose to lead with, plus up to two supports.</li>
+    <li><strong>Quiet work.</strong> Cases that haven't moved in a while, kept visible so you can decide what's next.</li>
+    <li><strong>Counts.</strong> How much is active, waiting, or recently closed.</li>
+  </ul>
+  <p class="muted">Tip: if the main slot is empty, open Focus and pick the Case that's easiest to resume.</p>
+{% endblock %}

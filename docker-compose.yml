@@ -1,0 +1,59 @@
+# Production compose for casedock — Hetzner + external Caddy
+#
+# Setup steps (run once per host):
+#   1. Create the shared Caddy network (skip if your Caddy already has one):
+#        docker network create caddy_net
+#      If your existing network has a different name, set CADDY_NETWORK below.
+#   2. Copy .env.prod.example → .env, fill real values:
+#        cp .env.prod.example .env && $EDITOR .env
+#   3. Add the casedock block to your global Caddyfile (see Caddyfile.snippet).
+#   4. Build and start:
+#        docker compose up -d --build
+#
+# Caddy resolves the container via the shared docker network by name:
+#   reverse_proxy casedock_web:8000
+
+name: casedock
+
+x-env-file: &env-file
+  - .env
+
+services:
+  postgres:
+    image: postgres:17-slim
+    container_name: casedock_postgres
+    env_file: *env-file
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-casedock} -d ${POSTGRES_DB:-casedock}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: casedock:latest
+    container_name: casedock_web
+    env_file: *env-file
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings.prod
+      DATABASE_URL: postgresql://${POSTGRES_USER:-casedock}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-casedock}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - default
+      - caddy_net
+    restart: unless-stopped
+
+networks:
+  caddy_net:
+    external: true
+    name: ${CADDY_NETWORK:-caddy_net}
+
+volumes:
+  pgdata:
