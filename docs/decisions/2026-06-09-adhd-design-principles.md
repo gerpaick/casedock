@@ -292,7 +292,8 @@ Asking an ADHD user "what will make today a failure?" can trigger **rumination**
 
 **Design rule**: if inversion is surfaced to users (e.g., a daily prompt or reflection view), use **positive inversion** ("imagine the day went well — what had to be true?") or frame negative inversion with agency language ("what can you set aside today?" instead of "what will go wrong?"). Same cognitive operation, different emotional frame.
 
-The framing matters more than the technique. "Porażka" (failure) triggers shame. "Odrzucam" (I set aside) triggers agency. Both achieve the same reduction — but only one is safe for ADHD users.
+The framing matters more than the technique. "Failure" triggers shame. "I set this aside"
+triggers agency. Both achieve the same reduction — but only one is safe for ADHD users.
 
 ---
 

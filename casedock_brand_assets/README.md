@@ -1,17 +1,19 @@
 # Casedock brand assets — Django package
 
-Paczka zawiera gotowe pliki do użycia w aplikacji Django: SVG, PNG, favicony, ikony PWA, plik CSS z tokenami oraz mini księgę znaku.
+This package contains ready-to-use assets for a Django application: SVG and PNG files,
+favicons, PWA icons, a CSS token file, and concise brand guidelines.
 
-## Szybkie użycie w Django
+## Quick setup in Django
 
-1. Skopiuj katalog `django_static/casedock/` do katalogu statycznego aplikacji, np.:
+1. Copy the `django_static/casedock/` directory into the application's static directory, for
+   example:
 
 ```bash
 mkdir -p your_app/static/casedock
 cp -R django_static/casedock/* your_app/static/casedock/
 ```
 
-2. W szablonie dodaj:
+2. Add the following to the template:
 
 ```django
 {% load static %}
@@ -21,26 +23,26 @@ cp -R django_static/casedock/* your_app/static/casedock/
 <link rel="stylesheet" href="{% static 'casedock/casedock-brand.css' %}">
 ```
 
-3. Logo w jasnym trybie:
+3. Logo in light mode:
 
 ```django
 <img class="casedock-logo" src="{% static 'casedock/casedock-logo-horizontal-light.svg' %}" alt="Casedock">
 ```
 
-4. Logo w ciemnym trybie:
+4. Logo in dark mode:
 
 ```django
 <img class="casedock-logo" src="{% static 'casedock/casedock-logo-horizontal-dark.svg' %}" alt="Casedock">
 ```
 
-## Rekomendowane pliki
+## Recommended files
 
-- Header/nav: `casedock-logo-horizontal-light.svg` / `casedock-logo-horizontal-dark.svg`
+- Header/navigation: `casedock-logo-horizontal-light.svg` / `casedock-logo-horizontal-dark.svg`
 - Sidebar/app launcher: `casedock-app-icon-light.svg` / `casedock-app-icon-dark.svg`
-- Favicon: `favicon.ico` albo `favicon-32x32.png`
+- Favicon: `favicon.ico` or `favicon-32x32.png`
 - PWA: `favicon-192x192.png`, `favicon-512x512.png`, `site.webmanifest`
 
-## Kolory
+## Colors
 
 - Ink Navy: `#0F172A`
 - Muted Blue: `#8FA1B3`
@@ -48,6 +50,7 @@ cp -R django_static/casedock/* your_app/static/casedock/
 - Dark Navy: `#061827`
 - Dark Panel: `#0B2234`
 
-## Uwaga projektowa
+## Design note
 
-SVG są wektorowe i powinny być preferowane w UI. PNG są dodane jako fallback, do social preview, dokumentacji lub miejsc, które nie przyjmują SVG.
+SVG files are vector-based and should be preferred in the UI. PNG files are provided as a
+fallback and for social previews, documentation, or environments that do not accept SVG.

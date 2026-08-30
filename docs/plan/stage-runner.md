@@ -4,7 +4,7 @@ Adapted from the `stage-runner` pattern used in an earlier solo project to fit c
 
 ## When to activate
 
-- User says: „continue", „co next", „what's next", „resume", „start work", „aktywny stage"
+- User says: "continue," "what next," "what's next," "resume," "start work," or "active stage"
 - At the start of any session that will implement code
 - Before marking any task `[x]` in `tasks.md`
 - Before opening a new spec / feature work

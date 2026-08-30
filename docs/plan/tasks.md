@@ -78,15 +78,15 @@ Acceptance:
 Depends on: Stage 8 in progress (8.1 + 8.2 recommended first)
 Source: ADR 2026-07-17 (ADHD principle #1 "show ONE next action" is top research finding, currently *not implemented*).
 
-This stage delivers the single highest-leverage ADHD principle that casedock currently violates. Per the ADR: „Bez tego casedock jest archiwem kontekstu, nie silnikiem wznowienia."
+This stage delivers the single highest-leverage ADHD principle that casedock currently violates. Per the ADR: "Without this, casedock is a context archive, not a resume engine."
 
 Open tasks:
 - [ ] 9.1 Board surfaces first unchecked ExecutionItem of the focused Case as a single "Just start" prompt (replaces or augments current focus hero)
 - [ ] 9.2 `is_first_visit` flag in `HomeView` / `BoardView` (session-key check) — first-time user sees a guided flow, not an empty board
 - [ ] 9.3 `_first_run.html` template — 3 steps: capture InboxItem → convert to Case → set Focus. All inline, no full-page reloads (HTMX)
-- [ ] 9.4 Pre-seed 2 demo InboxItems + 1 demo Case per new user on signup (scoped to user, clearly marked "Przykład", deletable in one click)
+- [ ] 9.4 Pre-seed 2 demo InboxItems + 1 demo Case per new user on signup (scoped to user, clearly marked "Example", deletable in one click)
 - [ ] 9.5 After first Focus setup → redirect to full Board with stale detection acked for demo data
-- [ ] 9.6 Welcome email via Resend (already configured) — one short email: „Twoje pierwsze Case czeka. Otwórz casedock." No marketing, no images
+- [ ] 9.6 Welcome email via Resend (already configured) — one short email: "Your first Case is waiting. Open casedock." No marketing, no images
 - [ ] 9.7 Focus hero on Board shows the *next action inside the focused Case* — not just the Case title
 - [ ] 9.8 Stale-ack UX rework: acking stale must feel like parking, not like guilt (no red, no "overdue", neutral grey)
 - [ ] 9.9 Tests: first-visit flow, demo data isolation per user, welcome email mock, just-start prompt visibility, stale-ack copy
@@ -105,7 +105,7 @@ Out of scope for Stage 9:
 ## Stage 10 — Trust Hardening (NOT STARTED, P1)
 
 Depends on: Stage 9 started (first-run must be coherent before legal copy is added)
-Source: 2026-07 review — „Wire dead links + `/help`, `/privacy`, `/terms` + minimum retencji"
+Source: 2026-07 review — "Wire dead links + `/help`, `/privacy`, `/terms` + minimum retention"
 
 Trust leaks are the cheapest fixes with the highest credibility gain — dead links in the footer undermine trust immediately.
 
@@ -116,7 +116,7 @@ Open tasks:
     - _Partial landed 2026-07-30: route + template + draft sections (account, hosting, tracking, deletion, beta status). Still pending: EU-legal review, hosting region/backup policy confirmation, self-serve export/delete in Settings, production email._
 - [ ] 10.3 `/terms/` route + `core/terms.html` — terms of service, beta disclaimer, no-warranty clause
     - _Partial landed 2026-07-30: route + template + draft sections (beta, as-is, account, acceptable use, contact). Still pending: legal entity, jurisdiction, liability cap, production email._
-- [ ] 10.4 Remove or wire every dead link in `templates/ui/base.html` (footer, nav) — zero kompromisów
+- [ ] 10.4 Remove or wire every dead link in `templates/ui/base.html` (footer, nav) — no compromises
     - _Footer help/privacy/terms wired 2026-07-30 (hardcoded paths → `{% url %}`). Other dead links audited as part of 10.4 still pending._
 - [ ] 10.5 Smoke test: every URL referenced in templates resolves to 200 (pytest-django client walk)
 - [ ] 10.6 Footer "Built by a solo dev with ADHD" — minimal trust signal, no logos
@@ -133,12 +133,12 @@ Acceptance:
 
 ---
 
-## Stage 12 — MCP Server (kierunek 1) (NOT STARTED, P3)
+## Stage 12 — MCP Server (direction 1) (NOT STARTED, P3)
 
 Depends on: Stage 8 complete (quality bar locked) + Stage 9 complete (Just Start exists — MCP `get_next_move` exposes it)
-Source: ADR 2026-07-17 §"MCP w casedock — po co, dlaczego, jaka korzyść" — kierunek 1 (casedock jako serwer MCP, agent czyta z casedock)
+Source: ADR 2026-07-17 §"MCP in casedock — purpose, rationale, and benefit" — direction 1 (casedock as an MCP server, with the agent reading from casedock)
 
-Stage 12 turns the AI-agent threat into a moat (per ADR): „MCP odwraca zagrożenie w fosę." The product becomes a structured source of truth that coding agents read — which makes casedock *more* valuable the more someone works with AI agents.
+Stage 12 turns the AI-agent threat into a moat (per ADR): "MCP turns the threat into a moat." The product becomes a structured source of truth that coding agents read — which makes casedock *more* valuable the more someone works with AI agents.
 
 Open tasks:
 - [ ] 12.1 `src/apps/ai/` skeleton (currently a stub) — Python MCP SDK, server bootstrap, healthcheck
@@ -146,7 +146,7 @@ Open tasks:
 - [ ] 12.3 Tool `get_focus` — returns today's focus slot (1 main + 2 secondary) or "no focus set today"
 - [ ] 12.4 Tool `list_active_cases` — returns active Cases for the authenticated user with titles + last-updated + first unchecked ExecutionItem title
 - [ ] 12.5 Tool `get_case` — full Case context: spec excerpt, last 3 decisions, first unchecked ExecutionItem, source links (no PrivateNotes unless explicitly shared)
-- [ ] 12.6 Tool `get_next_move` — surfaces the same "Just start" prompt that Stage 9 added to the Board, so the agent answers „co mam teraz robić?" from casedock, not from the model
+- [ ] 12.6 Tool `get_next_move` — surfaces the same "Just start" prompt that Stage 9 added to the Board, so the agent answers "what should I do now?" from casedock, not from the model
 - [ ] 12.7 Tool `capture_inbox_item` — the only write tool. Per ADR: must remain the only one. Captures into inbox for human triage.
 - [ ] 12.8 Enforce read-mostly invariant in tests — no tool other than `capture_inbox_item` mutates state
 - [ ] 12.9 Enforce PrivateNote isolation in tests — PrivateNotes never returned by any tool unless explicit per-Case opt-in
@@ -160,7 +160,7 @@ Acceptance:
 - Docs locked: spec is the contract, code is the implementation, no drift
 
 Out of scope for Stage 12:
-- ClickUp connector (deferred indefinitely per ADR — MCP kierunek 2 may subsume it)
+- ClickUp connector (deferred indefinitely per ADR — MCP direction 2 may subsume it)
 - Jira / GitHub connectors (same)
 - Autonomous sync (forbidden by ADR — must remain on-demand)
 

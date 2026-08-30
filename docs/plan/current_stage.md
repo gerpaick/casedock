@@ -33,7 +33,8 @@ Alternative (if user prefers the ADHD hook first): **`9.1 Just-start prompt on B
 
 ## Blocked / parked
 
-- Stage 7 stubs (`clickup`, `ai`): intentional. Per ADR 2026-07-17, ClickUp connector is deferred indefinitely (MCP kierunek 2 may subsume it), and `ai` becomes Stage 12 (MCP server).
+- Stage 7 stubs (`clickup`, `ai`): intentional. Per ADR 2026-07-17, the ClickUp connector is
+  deferred indefinitely (MCP direction 2 may subsume it), and `ai` becomes Stage 12 (MCP server).
 - All further strategic-doc writing without a paired feature: forbidden — „planning is dopamine".
 
 ## Session checklist

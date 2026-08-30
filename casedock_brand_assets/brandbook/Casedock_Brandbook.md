@@ -1,55 +1,61 @@
-# Casedock — księga znaku
+# Casedock — brand guidelines
 
-## Idea marki
+## Brand concept
 
-Casedock to spokojny, minimalistyczny workspace dla solo developerów i knowledge workerów. Znak łączy poziomą belkę — dock / workbench — z trzema zawieszonymi case’ami. Symbolika odpowiada zasadzie produktu: jedno główne skupienie + dwa poboczne obszary pracy.
+Casedock is a calm, minimalist workspace for solo developers and knowledge workers. The
+mark combines a horizontal bar — a dock or workbench — with three suspended cases. The
+symbolism reflects the product principle: one main focus and two secondary areas of work.
 
-## Znak podstawowy
+## Primary mark
 
-Podstawowy lockup to symbol po lewej oraz wordmark `casedock` po prawej. Tagline: `CALM WORKBENCH FOR SOLO BUILDERS`.
+The primary lockup consists of the symbol on the left and the `casedock` wordmark on the
+right. Tagline: `CALM WORKBENCH FOR SOLO BUILDERS`.
 
 ## Symbol
 
-Belka reprezentuje stabilną przestrzeń pracy. Trzy zawieszone karty reprezentują uporządkowane Case’y: inbox przekształcony w konkretne jednostki wykonania.
+The bar represents a stable workspace. The three suspended cards represent organized Cases:
+inbox items transformed into concrete units of execution.
 
-## Kolorystyka
+## Color palette
 
-| Nazwa | HEX | Użycie |
+| Name | HEX | Usage |
 |---|---:|---|
-| Ink Navy | `#0F172A` | główny znak, tekst, elementy UI |
-| Muted Blue | `#8FA1B3` | tagline, sekundarne elementy, subtelne akcenty |
-| Warm White | `#FAF8F5` | tło jasne, karty, puste przestrzenie |
-| Dark Navy | `#061827` | tło dark mode |
-| Dark Panel | `#0B2234` | tło ikon / paneli w dark mode |
+| Ink Navy | `#0F172A` | primary mark, text, UI elements |
+| Muted Blue | `#8FA1B3` | tagline, secondary elements, subtle accents |
+| Warm White | `#FAF8F5` | light backgrounds, cards, whitespace |
+| Dark Navy | `#061827` | dark-mode background |
+| Dark Panel | `#0B2234` | dark-mode icon and panel backgrounds |
 
-## Typografia
+## Typography
 
-Wordmark bazuje na spokojnym, geometrycznym sans-serifie z dużym trackingiem. W aplikacji rekomendowane są: Inter, system-ui, SF Pro, Segoe UI.
+The wordmark uses a calm, geometric sans serif with generous tracking. Recommended typefaces
+for the application are Inter, system-ui, SF Pro, and Segoe UI.
 
-## Pole ochronne
+## Clear space
 
-Zachowuj minimalne pole ochronne równe wysokości jednej zawieszonej karty symbolu. Nie doklejaj logo do krawędzi, buttonów ani aktywnych kontrolek UI.
+Maintain a minimum clear space equal to the height of one suspended card in the symbol. Do not
+place the logo flush against edges, buttons, or active UI controls.
 
-## Minimalne rozmiary
+## Minimum sizes
 
-- Pełne logo poziome: minimum 120 px szerokości na ekranie.
-- Sam symbol: minimum 32 px szerokości.
-- W druku: pełne logo minimum 15 mm szerokości.
+- Full horizontal logo: minimum width of 120 px on screen.
+- Symbol alone: minimum width of 32 px.
+- In print: minimum width of 15 mm for the full logo.
 
-## Wersje
+## Variants
 
-- Jasna: ciemny znak na `#FAF8F5` albo białym tle.
-- Ciemna: biały znak na `#061827` albo `#0B2234`.
-- Sam symbol: favicon, app icon, launcher, małe stany UI.
+- Light: dark mark on `#FAF8F5` or a white background.
+- Dark: white mark on `#061827` or `#0B2234`.
+- Symbol alone: favicon, app icon, launcher, and compact UI states.
 
-## Nie rób
+## Don'ts
 
-- Nie rozciągaj logo.
-- Nie dodawaj gradientów i mocnych efektów.
-- Nie używaj jaskrawych kolorów.
-- Nie umieszczaj logo na chaotycznym tle bez kontrastu.
-- Nie zmieniaj proporcji między symbolem a wordmarkiem.
+- Do not stretch the logo.
+- Do not add gradients or heavy effects.
+- Do not use bright colors.
+- Do not place the logo on a visually busy background without sufficient contrast.
+- Do not change the proportions between the symbol and the wordmark.
 
-## Ton wizualny
+## Visual tone
 
-Spokojny. Strukturalny. Skupiony. Low-noise.
+Calm. Structured. Focused. Low-noise.

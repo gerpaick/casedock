@@ -1,94 +1,147 @@
-# Presja agentów AI vs pierwotna idea casedock + kierunek MCP
+# AI agent pressure vs the original casedock concept + MCP direction
 
-Data: 2026-07-17
-Status: notatka strategiczna z rozmowy analitycznej — nie kontrakt produktowy
-Źródła: `docs/specs/01-product-vision.md`, `docs/research/2026-06-adhd-solo-developer-fit.md`, audyt stanu kodu (2026-07-17), research zewnętrzny (Leantime MCP, wzorzec "Claude Code + CLAUDE.md jako ADHD mode")
-
----
-
-## Kontekst rozmowy
-
-Analiza całej apki: idea, potrzeby, status. Najważniejsze ustalenia tła:
-
-- **Rdzeń produktu jest dojrzały**: core loop capture → triage → convert → case workspace → focus działa end-to-end, 154 testy, mypy strict, multi-user, konfiguracja deploy (Docker + Caddy). Moduły `clickup` i `ai` to świadome stuby.
-- **Wszystko wokół rdzenia nie istnieje**: brak onboardingu i publikacji, martwe linki `/help`, `/privacy`, `/terms`.
-- **Największa rozbieżność jest wewnętrzna**: produkt obiecuje "resume engine", a zasada ADHD #1 ("pokaż JEDNĄ następną akcję" / "Just Start") — top finding z własnego researchu, priorytet P0 — ma status *not implemented*.
-- Meta-ryzyko behawioralne: dokumenty strategiczne powstają szybciej niż weryfikacja na użytkownikach („planning is dopamine").
+Date: 2026-07-17
+Status: strategic note from an analytical discussion — not a product contract
+Sources: `docs/specs/01-product-vision.md`,
+`docs/research/2026-06-adhd-solo-developer-fit.md`, codebase audit (2026-07-17), and external
+research (Leantime MCP, the "Claude Code + CLAUDE.md as ADHD mode" pattern)
 
 ---
 
-## ⚡ PIERWOTNA IDEA vs PRESJA ZE STRONY AGENTÓW AI
+## Discussion context
 
-> **To jest najważniejszy wniosek z tej rozmowy. Czytaj ten blok przy każdej decyzji o pozycjonowaniu i roadmapie.**
+Analysis of the whole application: concept, needs, and status. Key background findings:
 
-### Nowa presja konkurencyjna (nieobecna w dotychczasowych dokumentach)
-
-Po analizach z 2025/2026 wyrósł wzorzec, którego nie ma w `docs/research/`: developerzy z ADHD rozwiązują problem inicjacji zadania i odzyskiwania kontekstu przez **agenty AI + pliki kontekstu** (CLAUDE.md / AGENTS.md, task listy czytane przez agenta co sesję). Powstają teksty typu "Claude Code jako mój ADHD mode". Leantime dodał serwer MCP, żeby AI pytało "co mam teraz robić?" bezpośrednio z projektu.
-
-To uderza w propozycję wartości casedock w wariancie **"resume engine dla kodera"**: jeśli agent kodujący i tak trzyma kontekst projektu, po co osobna apka do odzyskiwania kontekstu?
-
-### Ale pierwotna idea leży na innym terenie
-
-Pierwotny problem, z którego wyrósł casedock:
-
-> Wiele tasków od wielu osób (ClickUp, Todoist, email), kilka projektów + support techniczny. Ilość tworzy chaos — kończy się na **klikaniu i przeglądaniu zamiast planowania**.
-
-To jest problem **chaosu na wejściu (intake + triage)**, nie problem kontekstu w kodzie. I ta część jest **znacznie bardziej odporna na falę agentów AI**, bo:
-
-1. **CLAUDE.md jest per-repo.** Chaos jest *między* projektami: klient A, klient B, support, email, ClickUp. Żaden plik kontekstu w repozytorium nie widzi całego strumienia.
-2. **Agent kodujący nie robi triage'u.** Nie odpowie na pytanie "z 40 rzeczy, które dziś wpadły, co ma prawo wejść do mojej pracy, a co parkuję". To jest decyzja, nie kompilacja kontekstu.
-3. **Pętla "klikam i przeglądam zamiast planować"** to ADHD-owe unikanie decyzji przez pseudo-aktywność. ClickUp/Todoist ją *pogłębiają* (nieskończona lista do scrollowania); casedock ją *przecina* (przymusowy triage: park / do now / convert / waiting + twardy limit fokusa 1+2). Pierwszym ekranem jest decyzja, nie lista.
-
-Spójne z własnym researchem: fit "incoming work scattered across tools" = *high*; "personal interpretation layer between external assignment and real execution" = *very high*.
-
-### Wniosek pozycjonujący
-
-- **Rdzeń tożsamości**: jeden lejek, przez który przechodzi cały chaos z ClickUpa/Todoista/maila, *zanim* stanie się pracą. Tego agenty AI nie obsługują i długo nie obsłużą — to problem podejmowania decyzji, nie techniczny.
-- **Druga noga (nie odwrotnie)**: context recovery / "resume engine" — tu agenty realnie odgryzają wartość, więc ta noga wymaga integracji z agentami (MCP, niżej), a nie konkurowania z nimi.
+- **The product core is mature**: the capture → triage → convert → Case workspace → focus loop
+  works end-to-end, with 154 tests, strict mypy, multi-user support, and deployment configuration
+  (Docker + Caddy). The `clickup` and `ai` modules are intentional stubs.
+- **Everything around the core is missing**: there is no onboarding or public presence, and the
+  `/help`, `/privacy`, and `/terms` links are dead.
+- **The biggest mismatch is internal**: the product promises a "resume engine," while ADHD
+  principle #1 ("show ONE next action" / "Just Start") — the top finding from the project's own
+  research and a P0 priority — is *not implemented*.
+- Behavioral meta-risk: strategic documents are created faster than ideas are tested with users
+  ("planning is dopamine").
 
 ---
 
-## MCP w casedock — po co, dlaczego, jaka korzyść
+## ⚡ THE ORIGINAL CONCEPT VS PRESSURE FROM AI AGENTS
 
-### Teza strategiczna
+> **This is the most important conclusion from this discussion. Read this section whenever
+> making a positioning or roadmap decision.**
 
-**MCP odwraca zagrożenie w fosę.** Bez MCP casedock i agent AI konkurują o rolę "pamięci zewnętrznej" — agent wygra wygodą. Z MCP casedock staje się **strukturalnym źródłem prawdy, które agent czyta**: cross-projektowym, z cyklem życia (inbox → case → done), z triage'em — czego pliki per-repo nie mają. Im więcej pracy z agentami, tym casedock jest *bardziej* potrzebny, nie mniej.
+### New competitive pressure (absent from the existing documents)
 
-### Kierunek 1: casedock jako serwer MCP (agent czyta z casedock) — priorytet
+The 2025/2026 analysis revealed a pattern absent from `docs/research/`: developers with ADHD
+are solving task-initiation and context-recovery problems with **AI agents + context files**
+(CLAUDE.md / AGENTS.md and task lists that an agent reads each session). Articles describe
+"Claude Code as my ADHD mode." Leantime added an MCP server so AI can ask "what should I work
+on now?" directly from the project.
 
-Scenariusze użycia:
+This challenges the **"resume engine for a developer"** version of casedock's value proposition:
+if a coding agent already retains project context, why use a separate app to recover it?
 
-- **Start sesji kodowania.** Agent woła `get_focus` + `get_case` → dostaje spec Case'a, ostatnie decyzje, pierwszy niedokończony ExecutionItem. Pytanie "co mam teraz robić?" dostaje odpowiedź z *własnego* systemu decyzyjnego usera, nie wymyśloną przez model.
-- **Capture bez wychodzenia z terminala.** W trakcie kodowania przychodzi myśl "trzeba ogarnąć backup u klienta X" → agent woła `capture_inbox_item`. Myśl ląduje w lejku, zero zmiany kontekstu. Dla ADHD kluczowe: największy koszt capture to przełączenie do innej apki.
-- **Koniec sesji = tanie ponowne wejście.** Agent podsumowuje "co ustaliliśmy i jaki jest następny ruch", user zatwierdza, wpis ląduje jako decyzja/ExecutionItem w Case. Robotę dokumentacyjną (której ADHD-owy mózg nienawidzi) wykonuje agent.
+### But the original concept occupies different ground
 
-Precedens rynkowy: Leantime MCP server ("what should I work on next?" z live project context).
+The original problem from which casedock emerged:
 
-### Kierunek 2: MCP jako kanał wejściowy (zamiast dedykowanych connectorów)
+> Many tasks from many people (ClickUp, Todoist, email), several projects, and technical support.
+> The volume creates chaos that results in **clicking and browsing instead of planning**.
 
-Roadmapa (Phase 2) zakłada ręcznie pisany connector ClickUp, potem Jira/GitHub. Alternatywa: agent z dostępem MCP do ClickUpa/maila/GitHuba **zasila inbox casedock** przez ten sam `capture_inbox_item`.
+This is a problem of **inbound chaos (intake + triage)**, not a problem of context in code. This
+part is **far more resilient to the wave of AI agents**, because:
 
-- Korzyść: jeden punkt wejścia zamiast N connectorów do utrzymania; każda pozycja i tak przechodzi ludzki triage ("triage before commitment").
-- **Ryzyko do pilnowania**: musi pozostać *na żądanie* ("zbierz mi dzisiejsze taski z ClickUpa do inboxa"), nie jako autonomiczny sync w tle — inaczej odtworzy się ten sam chaos, od którego user ucieka, tylko w casedock.
+1. **CLAUDE.md is per repository.** The chaos exists *between* projects: client A, client B,
+   support, email, and ClickUp. No repository context file sees the whole stream.
+2. **A coding agent does not perform triage.** It will not answer, "Of the 40 things that arrived
+   today, which ones are allowed into my work and which ones should I park?" That is a decision,
+   not context compilation.
+3. **The "clicking and browsing instead of planning" loop** is ADHD-driven decision avoidance
+   through pseudo-activity. ClickUp and Todoist *deepen* it with an endless scrolling list;
+   casedock *breaks* it with mandatory triage (park / do now / convert / waiting) and a hard 1+2
+   focus limit. The first screen presents a decision, not a list.
 
-### Granice (zgodne z istniejącymi zasadami produktu — muszą pozostać nienaruszone)
+This is consistent with the project's research: fit for "incoming work scattered across tools"
+= *high*; fit for a "personal interpretation layer between external assignment and real
+execution" = *very high*.
 
-- **"AI nie podejmuje autonomicznych decyzji"** → narzędzia read-mostly. Jedyny zapis: `capture_inbox_item` (przechodzi ludzki triage). Żadnego `set_focus`, `close_case`, `prioritize` przez agenta.
-- **"Prywatne notatki nie wychodzą do systemów zewnętrznych bez jawnej akcji usera"** → `PrivateNote` domyślnie NIEwystawione przez MCP; ewentualnie osobna, świadoma zgoda per Case.
-- Całość opt-in, token per user.
+### Positioning conclusion
 
-### Szkic techniczny (na później, nie do natychmiastowej realizacji)
-
-- Naturalne miejsce: stub `src/apps/ai/`.
-- Python MCP SDK + autoryzacja tokenem per user.
-- 4–5 narzędzi na start: `get_focus`, `list_active_cases`, `get_case`, `get_next_move`, `capture_inbox_item`.
-- Mały, dobrze ograniczony zakres — tanie do zbudowania po domknięciu P0.
+- **Core identity**: one funnel through which all the chaos from ClickUp, Todoist, and email
+  passes *before* it becomes work. AI agents do not handle this and will not for a long time —
+  this is a decision-making problem, not a technical one.
+- **The second pillar (not the other way around)**: context recovery / "resume engine." Agents
+  genuinely erode value here, so this pillar needs integration with agents (MCP, below), not
+  competition against them.
 
 ---
 
-## Rekomendowana kolejność (bez zmian względem audytu journey, z jednym dopiskiem)
+## MCP in casedock — purpose, rationale, and benefit
 
-1. **Zasada ADHD #1 ("Just Start" / jedna widoczna następna akcja)** — przed każdym nowym feature'em. Bez tego casedock jest archiwum kontekstu, nie silnikiem wznowienia.
-2. First-run experience → martwe linki (`/help`, `/privacy`, `/terms`).
-3. **MCP (kierunek 1)** — przed connectorem ClickUp z Phase 2; świat poszedł w stronę agentów, nie ręcznych connectorów.
-4. Pytanie kontrolne przed każdą sesją: *czy sam przetworzyłem dziś swoją pracę przez casedock?* (metryka sukcesu MVP ze speców: "user zaczyna procesować pracę najpierw w tym systemie").
+### Strategic thesis
+
+**MCP turns the threat into a moat.** Without MCP, casedock and an AI agent compete for the role
+of "external memory," and the agent wins on convenience. With MCP, casedock becomes **a
+structured source of truth that the agent reads**: cross-project, with a lifecycle (inbox → Case
+→ done) and triage that per-repository files do not provide. The more someone works with agents,
+the *more* they need casedock, not less.
+
+### Direction 1: casedock as an MCP server (the agent reads from casedock) — priority
+
+Usage scenarios:
+
+- **Start of a coding session.** The agent calls `get_focus` + `get_case` and receives the Case
+  spec, recent decisions, and the first incomplete ExecutionItem. The question "what should I do
+  now?" is answered by the user's *own* decision system, not invented by the model.
+- **Capture without leaving the terminal.** While coding, the thought "I need to sort out the
+  backup for client X" appears, so the agent calls `capture_inbox_item`. The thought enters the
+  funnel with no context switch. This is critical for ADHD: the greatest capture cost is
+  switching to another app.
+- **End of session = low-cost re-entry.** The agent summarizes "what we decided and what the next
+  move is"; the user approves it; and the entry becomes a Decision or ExecutionItem in the Case.
+  The agent handles the documentation work that an ADHD brain hates.
+
+Market precedent: Leantime MCP server ("what should I work on next?" with live project context).
+
+### Direction 2: MCP as an intake channel (instead of dedicated connectors)
+
+The roadmap (Phase 2) assumes a custom-built ClickUp connector followed by Jira and GitHub. An
+alternative is for an agent with MCP access to ClickUp, email, and GitHub to **feed the casedock
+Inbox** through the same `capture_inbox_item` tool.
+
+- Benefit: one intake point instead of N connectors to maintain; every item still passes through
+  human triage ("triage before commitment").
+- **Risk to manage**: it must remain *on demand* ("collect today's ClickUp tasks in my Inbox"),
+  not an autonomous background sync. Otherwise, the same chaos the user is escaping will be
+  recreated inside casedock.
+
+### Boundaries (consistent with existing product principles — must remain intact)
+
+- **"AI does not make autonomous decisions"** → tools are read-mostly. The only write operation
+  is `capture_inbox_item`, which passes through human triage. No agent-driven `set_focus`,
+  `close_case`, or `prioritize`.
+- **"Private notes do not leave for external systems without an explicit user action"** →
+  `PrivateNote` is NOT exposed through MCP by default; a separate, informed opt-in may be added
+  per Case.
+- The entire feature is opt-in, with one token per user.
+
+### Technical outline (for later, not immediate implementation)
+
+- Natural location: the `src/apps/ai/` stub.
+- Python MCP SDK + per-user token authentication.
+- Four or five initial tools: `get_focus`, `list_active_cases`, `get_case`, `get_next_move`, and
+  `capture_inbox_item`.
+- Small, well-bounded scope that is inexpensive to build after P0 is complete.
+
+---
+
+## Recommended sequence (unchanged from the journey audit, with one addition)
+
+1. **ADHD principle #1 ("Just Start" / one visible next action)** — before every new feature.
+   Without it, casedock is a context archive, not a resume engine.
+2. First-run experience → dead links (`/help`, `/privacy`, `/terms`).
+3. **MCP (direction 1)** — before the ClickUp connector from Phase 2; the world has moved toward
+   agents, not custom-built connectors.
+4. A checkpoint question before every session: *Did I process my own work through casedock
+   today?* (the MVP success metric from the specs: "the user starts processing work in this
+   system first").

@@ -39,155 +39,178 @@
 
 1. Stage 8: hardening (empty-state polish, error handling audit, release gates)
 
-## Tailwind migration — plan sesji
+## Tailwind migration — session plan
 
-### Zasady cross-session
+### Cross-session rules
 
-1. **Każda sesja kończy się działającą apką** — Tailwind i stary `app.css` współistnieją, migrujemy incrementalnie.
-2. **Po każdej sesji aktualizuj ten plik** — sekcja "Tailwind — status" poniżej. Zapisz:
-   - co zostało zrobione (które komponenty/template'y)
-   - co jest do zrobienia (konkretne klasy, pliki)
-   - ewentualne problemy lub decyzje podjęte w trakcie
-3. **Commit per sesja** — z sensowną wiadomością, np. `tailwind: setup infra`, `tailwind: migrate ui/ templates`.
-4. **Jeśli sesja przerywa w połowie** — napisz co zostało niedokończone w sekcji status.
-5. **Nie usuwaj `app.css`** dopóki Faza 5 (cleanup) nie jest gotowa.
+1. **Every session ends with a working application** — Tailwind and the old `app.css` coexist;
+   migrate incrementally.
+2. **Update this file after every session** — use the "Tailwind — status" section below. Record:
+   - what was completed (which components/templates)
+   - what remains to be done (specific classes and files)
+   - any problems or decisions made along the way
+3. **One commit per session** — with a meaningful message, such as `tailwind: setup infra` or
+   `tailwind: migrate ui/ templates`.
+4. **If a session stops halfway through** — record what remains unfinished in the status section.
+5. **Do not remove `app.css`** until Phase 5 (cleanup) is complete.
 
-### Kolejność sesji
+### Session sequence
 
-#### Sesja 1: Setup infra
+#### Session 1: Set up infrastructure
 
-**Cel:** Tailwind zainstalowany i kompiluje się, obok istniejącego `app.css`.
+**Goal:** Install and compile Tailwind alongside the existing `app.css`.
 
-**Kroki:**
-1. `npm init -y` (jeśli brak `package.json`)
+**Steps:**
+
+1. `npm init -y` (if `package.json` does not exist)
 2. `npm install -D tailwindcss @tailwindcss/cli`
-3. Stwórz `tailwind.config.js` — zaimportuj palette z `:root` CSS variables (23 zmienne):
-   - kolory: `--bg`, `--bg-soft`, `--panel`, `--panel-soft`, `--text`, `--text-soft`, `--muted`, `--line`, `--line-strong`, `--accent`, `--accent-strong`, `--capture-accent`, `--capture-accent-strong`, `--selected`, `--selected-strong`, `--success`, `--danger`
+3. Create `tailwind.config.js` — import the palette from the `:root` CSS variables (23
+   variables):
+   - colors: `--bg`, `--bg-soft`, `--panel`, `--panel-soft`, `--text`, `--text-soft`, `--muted`,
+     `--line`, `--line-strong`, `--accent`, `--accent-strong`, `--capture-accent`,
+     `--capture-accent-strong`, `--selected`, `--selected-strong`, `--success`, `--danger`
    - fonts: `--font-sans` (IBM Plex Sans), `--font-display` (Iowan Old Style)
    - shadows: `--shadow-soft`, `--shadow-elevated`
-4. Stwórz `static/ui/input.css` — `@import "tailwindcss"` + `@theme` z custom palette
+4. Create `static/ui/input.css` — `@import "tailwindcss"` + `@theme` with the custom palette
 5. Build: `npx @tailwindcss/cli -i static/ui/input.css -o static/ui/tailwind.css --watch`
-6. W `templates/base.html` dodaj `<link>` do `tailwind.css` **przed** `app.css` (Tailwind ma niższy priorytet, `app.css` override'uje dopóki nie usuniemy)
-7. `npm run build:css` w `package.json` scripts
-8. Zweryfikuj: apka wygląda identycznie jak przed
+6. Add a `<link>` to `tailwind.css` in `templates/base.html` **before** `app.css` (Tailwind has
+   lower priority, so `app.css` overrides it until removal)
+7. Add `npm run build:css` to the scripts in `package.json`
+8. Verify that the application looks identical to the previous version
 
-**Pliki do stworzenia/zmiany:**
-- `package.json` (nowy lub update)
-- `tailwind.config.js` (nowy)
-- `static/ui/input.css` (nowy)
-- `templates/base.html` (dodać link do tailwind.css)
-- `.gitignore` — dodaj `static/ui/tailwind.css` (generowany) jeśli nie trackujemy
+**Files to create or change:**
 
-**Kryteria sukcesu:**
-- `npx @tailwindcss/cli` kompiluje bez błędów
-- Apka wygląda identycznie z oboma CSS (Tailwind + app.css)
-- `uv run pytest` przechodzi
+- `package.json` (new or updated)
+- `tailwind.config.js` (new)
+- `static/ui/input.css` (new)
+- `templates/base.html` (add the link to tailwind.css)
+- `.gitignore` — add generated `static/ui/tailwind.css` if it is not tracked
 
----
+**Success criteria:**
 
-#### Sesja 2: Małe komponenty + template'y `ui/`
-
-**Cel:** Migruj małe komponenty i template'y z `apps/ui/`.
-
-**Komponenty do migracji (kolejność):**
-1. `.pill`, `.source-chip` — małe inline badge'e
-2. `.muted`, `.count-badge` — tekst/badge helper'y
-3. `.section-label`, `.eyebrow` — typograficzne label'e
-4. `.meta-list`, `.button-row` — prosty layout
-5. `.panel`, `.subpanel`, `.soft-row`, `.field` — layout komponenty
-
-**Template'y do migracji:**
-- `templates/ui/base.html` — shell, nawigacja, layout
-- `templates/ui/board.html` — główny board
-- `templates/ui/home.html` — strona domowa
-- `templates/ui/search.html` — wyszukiwarka
-- `templates/ui/settings.html` — ustawienia
-
-**Metoda:**
-- Dla każdej klasy CSS: znajdź definicję w `app.css`, stwórz Tailwind odpowiednik (utility classes lub `@apply` w `input.css` jeśli złożony)
-- Zastąp klasę w template
-- Sprawdź wizualnie czy wygląda tak samo
-- Usuń zmigrowaną regułę z `app.css`
-
-**Kryteria sukcesu:**
-- Template'y `ui/` używają Tailwind classes
-- Odpowiednie reguły usunięte z `app.css`
-- `uv run pytest` przechodzi
-- Apka wygląda identycznie
+- `npx @tailwindcss/cli` compiles without errors
+- The application looks identical with both CSS files (Tailwind + app.css)
+- `uv run pytest` passes
 
 ---
 
-#### Sesja 3: Template'y `inbox/`
+#### Session 2: Small components + `ui/` templates
 
-**Cel:** Migruj komponenty i template'y z `apps/inbox/`.
+**Goal:** Migrate small components and templates from `apps/ui/`.
 
-**Komponenty do migracji:**
-- `.inbox-*` — wszystkie inbox-specific styles
-- `.capture-*` — capture flow styles
-- Pozostałe komponenty używane w inbox template'ach
+**Components to migrate (in order):**
 
-**Template'y do migracji:**
+1. `.pill`, `.source-chip` — small inline badges
+2. `.muted`, `.count-badge` — text/badge helpers
+3. `.section-label`, `.eyebrow` — typographic labels
+4. `.meta-list`, `.button-row` — simple layout
+5. `.panel`, `.subpanel`, `.soft-row`, `.field` — layout components
+
+**Templates to migrate:**
+
+- `templates/ui/base.html` — shell, navigation, layout
+- `templates/ui/board.html` — main Board
+- `templates/ui/home.html` — home page
+- `templates/ui/search.html` — search
+- `templates/ui/settings.html` — settings
+
+**Method:**
+
+- For each CSS class, find its definition in `app.css` and create a Tailwind equivalent (utility
+  classes, or `@apply` in `input.css` if it is complex)
+- Replace the class in the template
+- Verify visually that it looks the same
+- Remove the migrated rule from `app.css`
+
+**Success criteria:**
+
+- The `ui/` templates use Tailwind classes
+- The corresponding rules have been removed from `app.css`
+- `uv run pytest` passes
+- The application looks identical
+
+---
+
+#### Session 3: `inbox/` templates
+
+**Goal:** Migrate components and templates from `apps/inbox/`.
+
+**Components to migrate:**
+
+- `.inbox-*` — all Inbox-specific styles
+- `.capture-*` — capture-flow styles
+- Other components used in Inbox templates
+
+**Templates to migrate:**
+
 - `templates/inbox/list.html`
 - `templates/inbox/detail.html`
 - `templates/inbox/capture.html`
 - `templates/inbox/convert.html`
 - `templates/inbox/do-now.html`
-- `templates/inbox/partials/` — wszystkie partials
+- `templates/inbox/partials/` — all partials
 
-**Kryteria sukcesu:**
-- Template'y `inbox/` używają Tailwind classes
-- Odpowiednie reguły usunięte z `app.css`
-- `uv run pytest` przechodzi
+**Success criteria:**
 
----
-
-#### Sesja 4: Template'y `cases/` + `focus/`
-
-**Cel:** Migruj najtrudniejsze template'y.
-
-**Komponenty do migracji:**
-- `.case-*` — case workspace styles
-- `.focus-*` — focus view styles
-- `.board-*` — pozostałe board-specific styles
-- Display mode compact overrides (~100 linii)
-
-**Template'y do migracji:**
-- `templates/cases/detail.html` — **434 linii**, najtrudniejszy template
-- `templates/focus/today.html` — 140 linii
-
-**Kryteria sukcesu:**
-- Template'y `cases/` i `focus/` używają Tailwind classes
-- Odpowiednie reguły usunięte z `app.css`
-- `uv run pytest` przechodzi
+- The `inbox/` templates use Tailwind classes
+- The corresponding rules have been removed from `app.css`
+- `uv run pytest` passes
 
 ---
 
-#### Sesja 5: Cleanup
+#### Session 4: `cases/` + `focus/` templates
 
-**Cel:** Usuń `app.css`, zostaw tylko custom CSS tam gdzie Tailwind nie wystarcza.
+**Goal:** Migrate the most complex templates.
 
-**Kroki:**
-1. Sprawdź co zostało w `app.css` — powinny być tylko:
+**Components to migrate:**
+
+- `.case-*` — Case workspace styles
+- `.focus-*` — Focus view styles
+- `.board-*` — remaining Board-specific styles
+- Compact display-mode overrides (~100 lines)
+
+**Templates to migrate:**
+
+- `templates/cases/detail.html` — **434 lines**, the most complex template
+- `templates/focus/today.html` — 140 lines
+
+**Success criteria:**
+
+- The `cases/` and `focus/` templates use Tailwind classes
+- The corresponding rules have been removed from `app.css`
+- `uv run pytest` passes
+
+---
+
+#### Session 5: Cleanup
+
+**Goal:** Remove `app.css`, leaving custom CSS only where Tailwind is insufficient.
+
+**Steps:**
+
+1. Check what remains in `app.css` — it should contain only:
    - `@keyframes` animations (message-countdown, captureDestinationHint)
    - Tippy.js theme (`.tippy-box[data-theme~="casedock-history"]`)
    - Complex radial-gradient backgrounds
-   - `:root` CSS variables (jeśli nie przeniesione w pełni do Tailwind config)
-2. Przenieś powyższe do `static/ui/animations.css`
-3. Usuń `static/ui/app.css`
-4. W `templates/base.html` — usuń link do `app.css`, dodaj link do `animations.css`
-5. Napraw testy — ~15 asercji w `test_stage6_surfaces.py` sprawdza konkretne klasy CSS
-6. Sprawdź `uv run ruff check .` i `uv run ruff format --check .`
-7. Sprawdź `uv run python -m mypy src/`
-8. Sprawdź `uv run pytest`
+   - `:root` CSS variables (if they have not been fully moved to the Tailwind configuration)
+2. Move the above into `static/ui/animations.css`
+3. Remove `static/ui/app.css`
+4. In `templates/base.html`, remove the link to `app.css` and add one to `animations.css`
+5. Repair the tests — approximately 15 assertions in `test_stage6_surfaces.py` check specific
+   CSS classes
+6. Run `uv run ruff check .` and `uv run ruff format --check .`
+7. Run `uv run python -m mypy src/`
+8. Run `uv run pytest`
 
-**Kryteria sukcesu:**
-- `app.css` usunięty
-- `animations.css` zawiera tylko to co Tailwind nie ogarnia
-- Wszystkie testy przechodzą
-- Lint/type check czysty
-- Apka wygląda identycznie
+**Success criteria:**
 
-### Co zostaje jako custom CSS
+- `app.css` has been removed
+- `animations.css` contains only what Tailwind cannot express cleanly
+- All tests pass
+- Lint and type checks are clean
+- The application looks identical
+
+### What remains as custom CSS
 
 - `@keyframes` animations (message-countdown, captureDestinationHint)
 - Tippy.js theme (`.tippy-box[data-theme~="casedock-history"]`)
@@ -196,61 +219,78 @@
 
 ### Tailwind — status
 
-**Aktualna sesja:** ✅ Sesja 5 COMPLETE — Tailwind migration finished
-**Zrobione:**
-- ✅ Sesja 1: Setup infra
+**Current session:** ✅ Session 5 COMPLETE — Tailwind migration finished
+**Completed:**
+
+- ✅ Session 1: Set up infrastructure
   - `package.json` — `npm install -D tailwindcss@4.2.4 @tailwindcss/cli@4.2.4`
-  - `static/ui/input.css` — `@import "tailwindcss"` + `@theme` z design tokens (18 kolorów, 2 fonty, 2 shadówy)
-  - `static/ui/tailwind.css` — generowany (w .gitignore)
-  - `templates/ui/base.html` — `<link>` do tailwind.css przed app.css
-  - `.gitignore` — dodany `static/ui/tailwind.css`
+  - `static/ui/input.css` — `@import "tailwindcss"` + `@theme` with design tokens (18 colors, 2
+    fonts, 2 shadows)
+  - `static/ui/tailwind.css` — generated (in .gitignore)
+  - `templates/ui/base.html` — `<link>` to tailwind.css before app.css
+  - `.gitignore` — added `static/ui/tailwind.css`
   - npm scripts: `dev:css` (watch), `build:css` (minify)
-  - 74/74 testów przechodzi, ruff czysto
-- ✅ Sesja 2: Małe komponenty + template'y `ui/`
-  - `input.css` 55→328 linii (+273): `@layer components` z 5 grupami komponentów + compact overrides
-  - `app.css` 2129→1872 linii (-257): usunięto zmigrowane reguły
-  - Migrowane komponenty: `.pill`, `.source-chip`, `.muted`, `.count-badge`, `.eyebrow`, `.section-label`, `.item-title`, `.meta-list`, `.button-row`, `.panel`, `.subpanel`, `.soft-list`, `.soft-row`, `.field`, `.field-grow`
-  - Wszystkie `var(--text)` → `var(--color-ink)` itd. (mapping tokenów w input.css)
-  - Template class names bez zmian — testy przechodzą bez modyfikacji
-  - 74/74 testów przechodzi, ruff czysto
-- ✅ Sesja 3: Template'y `inbox/` + shared components
-  - `input.css` 328→1109 linii (+781): Groups 6-16 + compact overrides + `@media (max-width: 700px)` responsive block
-  - `app.css` 1872→1120 linii (-752): usunięto zmigrowane reguły
+  - 74/74 tests passing, ruff clean
+- ✅ Session 2: Small components + `ui/` templates
+  - `input.css` 55→328 lines (+273): `@layer components` with five component groups + compact
+    overrides
+  - `app.css` 2129→1872 lines (-257): removed migrated rules
+  - Migrated components: `.pill`, `.source-chip`, `.muted`, `.count-badge`, `.eyebrow`,
+    `.section-label`, `.item-title`, `.meta-list`, `.button-row`, `.panel`, `.subpanel`,
+    `.soft-list`, `.soft-row`, `.field`, `.field-grow`
+  - All `var(--text)` → `var(--color-ink)`, etc. (token mapping in input.css)
+  - Template class names unchanged — tests pass without modification
+  - 74/74 tests passing, ruff clean
+- ✅ Session 3: `inbox/` templates + shared components
+  - `input.css` 328→1109 lines (+781): Groups 6-16 + compact overrides +
+    `@media (max-width: 700px)` responsive block
+  - `app.css` 1872→1120 lines (-752): removed migrated rules
   - Group 6 (Buttons): `.button`, `.button-muted`, `.button-capture`, `.button-quiet`, `.button-subtle`, `.button-link`, `.focus-open-link`
   - Group 7 (Page layout): `.page-head`, `.page-head--stacked`, `.page-head--inbox`, `.page-head__top--inbox`, `.page-head__title-wrap`, `.page-head__action--inbox`, `.page-copy`
   - Group 8 (Section layout): `.section-block`, `.section-grid`, `.card-stack`, `.stack`, `.focus-strip`, `.board-layout`, `.section-head`
   - Group 9 (Inbox stage): `.inbox-stage`, `.inbox-stage__queue`, `.inbox-stage__focus`, `.board-main`, `.board-side`
-  - Group 10 (Inbox focus): `.inbox-focus` z `::before` pseudo-element, wszystkie `__` sub-komponenty
-  - Group 11 (Queue): `.queue-panel`, `.queue-list`, `.queue-row` z `::before` animowanym accent-barem, `__` sub-komponenty
+  - Group 10 (Inbox focus): `.inbox-focus` with a `::before` pseudo-element and all `__`
+    subcomponents
+  - Group 11 (Queue): `.queue-panel`, `.queue-list`, `.queue-row` with an animated `::before`
+    accent bar and `__` subcomponents
   - Group 12 (History): `.inbox-history`, `.history-list`, `.history-row`, `.history-tag`, `.history-tag--done`
-  - Group 13 (Capture modal): `.capture-modal` z `::backdrop`, `__frame`, `__header`, `.capture-entry-form`, `.capture-page-panel`
+  - Group 13 (Capture modal): `.capture-modal` with `::backdrop`, `__frame`, `__header`,
+    `.capture-entry-form`, `.capture-page-panel`
   - Group 14 (Form helpers): `.field-error`, `.field-help`, `.field-checkbox`, `.inline-form`, `.section-gap`, `.prose-panel p + p`, `.empty-state`
   - Group 15 (Detail note): `.detail-note`
-  - Group 16 (Capture destination hint): `.capture-destination-hint::after` (selector only, @keyframes stay in app.css)
+  - Group 16 (Capture destination hint): `.capture-destination-hint::after` (selector only;
+    @keyframes remain in app.css)
   - Compact overrides: `.stack`, `.page-head`, `.button`, `.capture-modal__frame`, `.inbox-focus`, `.page-copy`, `.detail-note`, `.panel p`
   - Responsive `@media (max-width: 700px)`: inbox + shared layout breakpoints
   - `.panel-form` is a semantic-only class (no CSS definition) — confirmed skipped
   - `.meta-list--inbox` migrated as variant
-  - 74/74 testów przechodzi, ruff czysto, Tailwind kompiluje się bez błędów
-- ✅ Sesja 4: Board, Focus, Case, Search CSS
-  - `input.css` 1109→1879 linii (+770): Groups 17-27 (board/focus/case/search + compact + responsive)
-  - `app.css` 1120→371 linii (-749): usunięto wszystkie page-specific reguły
+  - 74/74 tests passing, ruff clean, Tailwind compiles without errors
+- ✅ Session 4: Board, Focus, Case, and Search CSS
+  - `input.css` 1109→1879 lines (+770): Groups 17-27 (Board/Focus/Case/Search + compact +
+    responsive)
+  - `app.css` 1120→371 lines (-749): removed all page-specific rules
   - Group 17 (Surface stacks): `.surface-stack`, `.surface-stack--*`, `.board-focus-hero`, `.board-active-surface`, `.search-entry`, `.search-results-panel`, `.case-action-panel`, `.case-side-panel`, `.settings-surface`, `__head` variants
   - Group 18 (Board layout): `.board-main-layout`, `.board-right-rail`, `.case-side`, `.board-focus-rail`, `.board-focus-rail__content`
   - Group 19 (Board rows & lists): `.board-group`, `.board-side-panel`, `.focus-setup`, `.focus-current`, `.search-surface`, `.search-empty`, `.board-list`, `.board-history-list`, `.focus-secondary-list`, `.search-list`, `.board-row`, `.board-row__body`, `.board-row__head`, `.board-row__actions`, `.board-history-row`, `.focus-secondary-row`, `.search-row`
-  - Group 20 (Board focus cards): `.board-focus-row--three/two/single/empty`, `.board-focus-card--main/secondary`, `.board-focus-card__title` z clamped text + fade gradient, `.board-focus-card__remove`, `.board-focus-card__details`, `@media (hover: none)` touch overrides
+  - Group 20 (Board focus cards): `.board-focus-row--three/two/single/empty`,
+    `.board-focus-card--main/secondary`, `.board-focus-card__title` with clamped text + fade
+    gradient, `.board-focus-card__remove`, `.board-focus-card__details`, `@media (hover: none)`
+    touch overrides
   - Group 21 (Board active & rail): `.board-active-row` + sub-components, `.board-rail-panel`, `.board-rail-list`, `.board-rail-row`
-  - Group 22 (Focus layout): `.focus-slot`, `.focus-slot--main`, `.focus-shell`, `.focus-current__main`, `.focus-workbench`, `.focus-primary`, `.focus-spotlight` z border/background, `.focus-secondary-row`
+  - Group 22 (Focus layout): `.focus-slot`, `.focus-slot--main`, `.focus-shell`,
+    `.focus-current__main`, `.focus-workbench`, `.focus-primary`, `.focus-spotlight` with
+    border/background, `.focus-secondary-row`
   - Group 23 (Search layout): `.search-row`, `.search-row__body`, `.search-form`, `.search-entry` gap override, `.search-results-shell`, `.search-results-panel--primary`
   - Group 24 (Case layout): `.case-entry` + `__primary/summary/metrics/side/grid`, `.case-callout` + `__body`, `.case-metric`, `.case-workbench`, `.case-main`, `.case-section__split`, `.case-section__column`, `.case-section__column--form`
   - Group 25 (Shared elements): `.plain-list`, `.focus-card`/`.board-card`, `.stat-number`, `.board-card__actions`, `.board-row__actions` button widths, `.spec-block`, `.action-menu`, hover states
   - Group 26 (Compact overrides): `.shell`, `.soft-row`, layout gaps, `.board-focus-card--main`, `.board-focus-card__title`, `.focus-spotlight`, `.focus-spotlight__title`, `.case-callout`, `.case-callout__body`
-  - Group 27 (Responsive): `.topbar`, `.topbar-actions`, `.nav`, wszystkie multi-column layouts collapsed, `.board-active-row__actions`
+  - Group 27 (Responsive): `.topbar`, `.topbar-actions`, `.nav`, all multi-column layouts
+    collapsed, `.board-active-row__actions`
   - Token mapping applied (zero `var(--text)` / `var(--muted)` / `var(--accent)` leaks in input.css)
-  - 74/74 testów przechodzi, ruff czysto, Tailwind kompiluje się bez błędów
-- ✅ Sesja 5: Cleanup — `app.css` removed
-  - `input.css` 1879→2239 linii (+360): `@layer base` + Groups 28-32 + keyframes + Tippy theme
-  - `app.css` **USUNIĘTY** (371→0 linii)
+  - 74/74 tests passing, ruff clean, Tailwind compiles without errors
+- ✅ Session 5: Cleanup — `app.css` removed
+  - `input.css` 1879→2239 lines (+360): `@layer base` + Groups 28-32 + keyframes + Tippy theme
+  - `app.css` **REMOVED** (371→0 lines)
   - `@layer base`: body styles (margin, radial-gradient background, font), `.has-modal-open`, heading resets (h1-h4)
   - Group 28 (Shell & brand): `.brand`, `.shell`, `main`
   - Group 29 (Topbar): `.topbar`, `.topbar-brand`, `.topbar-note`, `.topbar-actions`
@@ -263,23 +303,34 @@
   - `* { box-sizing }` removed — Tailwind Preflight handles this
   - Zero old `var()` references remain (all → `--color-*` tokens)
   - `base.html`: removed `app.css` link, only `tailwind.css` loaded
-  - 74/74 testów przechodzi, ruff czysto, Tailwind kompiluje się bez błędów
-**Do zrobienia:** — nic (Tailwind migration COMPLETE)
-**Problemy/decyzje:**
-- Tailwind v4 to CSS-first config — brak `tailwind.config.js`, wszystko w `@theme` w CSS
-- Nazwy tokenów zmienione vs `:root` żeby uniknąć kolizji z Tailwind namespace'ami:
+  - 74/74 tests passing, ruff clean, Tailwind compiles without errors
+
+**To do:** — nothing (Tailwind migration COMPLETE)
+
+**Problems/decisions:**
+
+- Tailwind v4 uses CSS-first configuration — there is no `tailwind.config.js`; everything lives
+  in `@theme` in CSS
+- Token names changed from their `:root` versions to avoid collisions with Tailwind namespaces:
   `--text → --color-ink`, `--line → --color-rule`, `--bg → --color-base`, `--panel → --color-surface`
-- Mapping tokenów udokumentowany w `static/ui/input.css`
-- Strategia migracji: przenosimy definicje CSS do `@layer components` w input.css, zachowujemy nazwy klas w template'ach — bezpieczne i stopniowe
-- Tailwind tree-shakuje nieużywane tokeny — custom utilities pojawią się w output gdy zaczniemy ich używać w template'ach
-- Sesja 3 migrowała shared components — Sesja 4 mogła skupić się na board/focus/case/search
-- Sesja 4 przeniosła też `.board-row__actions .button/.button-muted` i `.board-rail-row .detail-note` które w Sesji 3 zostały w app.css
-- Sesja 5: plan zakładał że w `app.css` zostaną tylko keyframes + tippy + `:root` — w rzeczywistości zostały też global styles (body, shell, topbar, headings, nav), messages system (144 linie), hero/lede/panel-grid. Wszystko przeniesione do `input.css` jako `@layer base` + Groups 28-32
-- Sesja 5: zamiast tworzyć `animations.css`, keyframes i Tippy theme umieszczono bezpośrednio na końcu `input.css` (poza `@layer`) — prostsze, mniej plików
+- The token mapping is documented in `static/ui/input.css`
+- Migration strategy: move CSS definitions into `@layer components` in input.css while keeping
+  class names unchanged in templates — safe and incremental
+- Tailwind tree-shakes unused tokens — custom utilities will appear in the output once templates
+  begin using them
+- Session 3 migrated shared components, allowing Session 4 to focus on Board/Focus/Case/Search
+- Session 4 also moved `.board-row__actions .button/.button-muted` and
+  `.board-rail-row .detail-note`, which remained in app.css after Session 3
+- Session 5: the plan assumed that only keyframes, Tippy, and `:root` would remain in `app.css`;
+  in practice, global styles (body, shell, topbar, headings, navigation), the messages system
+  (144 lines), and hero/lede/panel-grid remained too. Everything moved into `input.css` as
+  `@layer base` + Groups 28-32
+- Session 5: instead of creating `animations.css`, the keyframes and Tippy theme were placed
+  directly at the end of `input.css` (outside `@layer`) — simpler, with fewer files
 
-### Szacunek
+### Estimate
 
-5 sesji.
+Five sessions.
 
 ## Last updated
 

@@ -1,47 +1,66 @@
-# Board — Twój codzienny punkt startowy
+# Board — Your Daily Starting Point
 
-Kiedy otwierasz casedock, pierwsza rzecz którą widzisz to Board. To nie jest dashboard z wykresami. To nie jest lista wszystkiego co masz do zrobienia. To jest **twój widok na dziś** — spokojny, celowy, bez szumu.
+When you open casedock, the first thing you see is the Board. It is not a dashboard full of
+charts. It is not a list of everything you need to do. It is **your view of today** — calm,
+intentional, and free of noise.
 
-## Co jest na Boardzie
+## What is on the Board
 
-Board ma trzy sekcje. Tyle. Nie pięć, nie dziesięć. Trzy.
+The Board has three sections. That's it. Not five, not ten. Three.
 
 ### 1. Daily Focus
 
-Najważniejsza rzecz na stronie. Twoja praca na dziś.
+The most important thing on the page. Your work for today.
 
-**Jeden główny Case (Main)** + opcjonalnie **dwa supporting Cases (Secondary)**.
+**One main Case (Main)** plus, optionally, **two supporting Cases (Secondary)**.
 
-Przykład: Rano siadasz do pracy. Wiesz że dziś chcesz:
-- Głównie: naprawić błąd logowania użytkowników
-- Jeśli będzie moment: poprawić dokumentację API
-- Jeśli będzie moment: odpowiedzieć na email od klienta o integracji
+Example: You sit down to work in the morning. You know that today you want to:
 
-Ustawiasz "Fix login bug" jako Main, a dwa pozostałe jako Secondary. Teraz kiedy otwierasz casedock, od razu wiesz na czym jesteś. Nie musisz myśleć "co miałem robić?" — Board ci przypomina.
+- Mainly: fix the user login bug
+- If there is time: improve the API documentation
+- If there is time: reply to a client's email about an integration
 
-**Jeśli nie masz ustawionego focusa**, widzisz spokojny komunikat: "Nothing has the front yet. Pick one main Case and, if useful, up to two secondary Cases." Żadnego_alert.png, żadnego czerwonego wykrzyknika. Po prostu informacja.
+You set "Fix login bug" as Main and the other two as Secondary. Now, whenever you open
+casedock, you immediately know where you left off. You do not have to think, "What was I
+supposed to be doing?" — the Board reminds you.
 
-Dlaczego max 1 + 2? Bo focus oznacza uwagę. Jeśli wszystko jest ważne, nic nie jest ważne. Trzy case'y to maks tego co realnie możesz mieć w głowie jednego dnia.
+**If you have not set a focus**, you see a calm message: "Nothing has the front yet. Pick one
+main Case and, if useful, up to two secondary Cases." No `alert.png`, no red exclamation mark.
+Just information.
 
-### 2. Stale Cases (rzeczy które potrzebują decyzji)
+Why a maximum of 1 + 2? Because focus means attention. If everything is important, nothing is
+important. Three Cases are the most you can realistically keep in mind during one day.
 
-To jest **delikatne przypomnienie**, nie narzekanie.
+### 2. Stale Cases (items that need a decision)
 
-Jeśli masz aktywny Case którego nie ruszyłeś od 7 dni (domyślnie), Board ci o nim przypomni. Nie listą alarmów, nie powiadomieniem — po prostu jedna karta na Boardzie z napisem "Untouched for 11 days" i trzema opcjami:
+This is a **gentle reminder**, not a complaint.
 
-- **Done** — zamknij, bo skończone. Często zapominamy zamknąć rzeczy które już działają.
-- **Move to waiting** — przenieś, bo czekasz na kogoś/coś. Niech nie zaśmieca listy aktywnych.
-- **Still active** — "wiem o tym, pracuję nad tym". Ale uwaga: możesz kliknąć to tylko 3 razy. Potem musisz podjąć decyzję.
+If you have an active Case that you have not touched for seven days (by default), the Board
+reminds you about it. Not with a list of alarms or a notification — just one card on the Board
+that says "Untouched for 11 days" and offers three options:
 
-Przykład: Masz Case "Refactor settings page". Ostatnia edycja była 2 tygodnie temu. Board ci go pokazuje. Klikasz "Still active" bo naprawdę chcesz do tego wrócić. Za tydzień Board pyta znowu. Klikasz "Still active" drugi raz. Za kolejny tydzień — trzeci raz. Czwartego razu nie ma. Board mówi: "ok, teraz musisz zdecydować — robisz to, czekasz na coś, czy to już done?"
+- **Done** — close it because it is finished. We often forget to close things that already work.
+- **Move to waiting** — move it because you are waiting for someone or something. Do not let it
+  clutter the active list.
+- **Still active** — "I know about it; I am working on it." But note that you can select this only
+  three times. After that, you must make a decision.
 
-Dlaczego nie blokada? Bo hard blocki przy ADHD działają gorzej niż przypomnienia. Zablokujesz kogoś i zamiast działać, będzie unikał apki. Lepiej delikatnie przypomnieć i dać wyjście.
+Example: You have a Case called "Refactor settings page." It was last edited two weeks ago, so
+the Board shows it to you. You select "Still active" because you genuinely want to return to it.
+A week later, the Board asks again. You select "Still active" a second time, then a third time
+the following week. There is no fourth time. The Board says, "Okay, now you need to decide —
+are you doing this, waiting for something, or is it already done?"
 
-Case'y które są w dzisiejszym focusie nie pojawiają się jako stale — sensowne, bo nad nimi właśnie pracujesz.
+Why not block the user? Because hard blocks work worse than reminders for people with ADHD. If
+you block someone, they may avoid the app instead of taking action. It is better to offer a
+gentle reminder and a way forward.
 
-### 3. Stats + Linki
+Cases in today's focus do not appear as stale — which makes sense, because you are actively
+working on them.
 
-Na samym dole Boardu masz jeden wiersz z trzema liczbami i dwoma linkami:
+### 3. Stats + Links
+
+At the bottom of the Board, one row shows three numbers and two links:
 
 ```
 4 active  ·  3 waiting  ·  2 closed this week
@@ -49,64 +68,89 @@ Na samym dole Boardu masz jeden wiersz z trzema liczbami i dwoma linkami:
 [See all active →]    [See waiting →]
 ```
 
-To jest pogląd sytuacji. Widzisz ile masz na talerzu bez wchodzenia w detale. Klikasz "See all active" i jedziesz do pełnej listy aktywnych case'ów. Klikasz "See waiting" i widzisz co czeka.
+This is an overview of the situation. You can see how much is on your plate without going into
+detail. Select "See all active" to open the full list of active Cases, or "See waiting" to see
+what is waiting.
 
-Dlaczego nie pełna lista na Boardzie? Bo Board to "co robię dziś", nie "co mam do zrobienia w ogóle". Pełne listy są w osobnych widokach — jak Inbox ma swój własny ekran, tak Active i Waiting mają swoje.
+Why not show the full list on the Board? Because the Board is about "what I am doing today," not
+"everything I need to do." Full lists live in separate views — just as the Inbox has its own
+screen, so do Active and Waiting.
 
 ---
 
 ## Focus transition prompt
 
-Jest jeszcze jedna rzecz która może się pojawić na Boardzie, ale tylko w konkretnym momencie.
+One more thing can appear on the Board, but only at a specific moment.
 
-Kiedy zmieniasz główny focus na nowy Case, a stary Case od czasu ustawienia focusa nie był edytowany — Board pyta co z nim:
+When you change the main focus to a new Case and the previous Case has not been edited since you
+focused on it, the Board asks what should happen to it:
 
 ```
 "Fix login bug" hasn't been updated since you focused on it.
 [Done]  [Move to waiting]  [Still working]
 ```
 
-To jest naturalny moment na to pytanie — właśnie zmieniasz priorytet, więc myślisz o tym co było ważne a co jest ważne teraz. Nie intruzja, tylko wykorzystanie momentu.
+This is a natural moment to ask: you are changing priorities, so you are already thinking about
+what mattered before and what matters now. It is not an interruption; it makes use of the
+moment.
 
-Dlaczego to działa? Bo normalnie zapominamy zamknąć rzeczy. Kiedy ustawiasz nowy focus, apka łapie moment i pyta. Nie musisz pamiętać o zamknięciu starego — apka ci przypomni.
-
----
-
-## Czego na Boardzie NIE ma (i dlaczego)
-
-**Pełna lista aktywnych case'ów** — jest w osobnym widoku (`/active/`). Board pokazuje tylko focus + problemy (stale). Jak chcesz przeglądnąć wszystko — klikasz link.
-
-**Pełna lista czekających case'ów** — osobny widok (`/waiting/`). Same tytuły i next steps, bez akcji. Bo z czekającymi rzeczami nie ma co robić poza sprawdzeniem czy coś się ruszyło.
-
-**Inbox** — Inbox ma swój własny ekran. Na Boardzie jest tylko licznik w nawigacji na górze. Nie mieszamy intake'u z pracą.
-
-**Zamknięte case'y** — zliczane w statystykach ("2 closed this week"), ale nie wyświetlane. Zrobione jest zrobione.
+Why does this work? Because we often forget to close things. When you set a new focus, the app
+catches the moment and asks. You do not have to remember to close the previous Case — the app
+reminds you.
 
 ---
 
-## Jak używać Boardu na co dzień
+## What is NOT on the Board (and why)
 
-**Rano:**
-1. Otwierasz casedock
-2. Widzisz focus — wiesz na czym jesteś
-3. Jeśli Board pyta o stare case'y — szybko decydujesz (5 sekund)
-4. Zaczynasz pracę
+**The full list of active Cases** — it lives in a separate view (`/active/`). The Board shows only
+the focus and Cases that need attention (stale). Select the link when you want to review
+everything.
 
-**W ciągu dnia:**
-1. Przeskakujesz między case'ami? Zmieniasz focus. Board pyta co ze starym.
-2. Otwierasz Board żeby wrócić do pracy — widzisz co jest na dziś
+**The full list of waiting Cases** — it has a separate view (`/waiting/`). It shows only titles
+and next steps, with no actions, because there is nothing to do with waiting items except check
+whether anything has changed.
 
-**Wieczór lub jutro rano:**
-1. Zamykasz case'y które skończyłeś
-2. Przenosisz do Waiting rzeczy które są zablokowane
-3. Ustawiasz nowy focus na jutro
+**Inbox** — the Inbox has its own screen. The Board only shows its count in the top navigation.
+Intake and work remain separate.
+
+**Closed Cases** — included in the statistics ("2 closed this week") but not displayed. Done is
+done.
 
 ---
 
-## Dla dociekliwych — jak to działa technicznie
+## How to use the Board each day
 
-- **Stale detection**: Case jest "stale" jeśli jest aktywny i nie był edytowany od 7+ dni (`CASEDOCK_STALE_PERIOD_DAYS`). Sprawdzane na podstawie `updated_at` — ale same potwierdzenia "Still active" nie aktualizują tego pola (używamy `QuerySet.update()` żeby ominąć `auto_now`).
-- **Stale exclusion**: Case'y w dzisiejszym focusie nie są pokazywane jako stale.
-- **Ack limit**: Max 3 potwierdzenia "Still active" (`CASEDOCK_STALE_ACK_LIMIT`). Potem zostają tylko opcje Done i Waiting.
-- **Transition prompt**: Pojawia się tylko gdy zmieniasz main focus i stary Case nie był edytowany po ustawieniu focusa (porównujemy `Case.updated_at` z `FocusAssignment.created_at`).
-- **HTMX**: Wszystkie akcje (stale resolution, focus actions) działają bez przeładowania strony — HTMX swapuje cały `#board-page`.
+**Morning:**
+
+1. Open casedock.
+2. See your focus and know where you stand.
+3. If the Board asks about old Cases, make a quick decision (five seconds).
+4. Start working.
+
+**During the day:**
+
+1. Switching between Cases? Change the focus. The Board asks what to do with the previous one.
+2. Open the Board to resume work and see what is set for today.
+
+**In the evening or the next morning:**
+
+1. Close the Cases you have finished.
+2. Move blocked items to Waiting.
+3. Set a new focus for tomorrow.
+
+---
+
+## For the curious — how it works technically
+
+- **Stale detection**: A Case is "stale" if it is active and has not been edited for seven or
+  more days (`CASEDOCK_STALE_PERIOD_DAYS`). This is determined from `updated_at`, but "Still
+  active" acknowledgments do not update that field (we use `QuerySet.update()` to bypass
+  `auto_now`).
+- **Stale exclusion**: Cases in today's focus are not shown as stale.
+- **Ack limit**: A maximum of three "Still active" acknowledgments
+  (`CASEDOCK_STALE_ACK_LIMIT`). After that, only Done and Waiting remain available.
+- **Transition prompt**: Appears only when you change the main focus and the previous Case has
+  not been edited since the focus was set (we compare `Case.updated_at` with
+  `FocusAssignment.created_at`).
+- **HTMX**: All actions (stale resolution and focus actions) work without reloading the page —
+  HTMX swaps the entire `#board-page`.
